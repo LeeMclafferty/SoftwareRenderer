@@ -161,6 +161,7 @@
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\SoftwareRendererProject.cpp" />
     <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\primatives\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\draw\RendererUtility.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="src\draw\Renderer.h" />
     <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\primatives\Triangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

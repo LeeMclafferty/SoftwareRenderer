@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "SDL.h"
+#include "primatives/Triangle.h"
 
 class Renderer;
 
@@ -19,10 +20,10 @@ private:
 	void DrawRectangle(int xPos, int yPos, int width, int height, uint32_t color);
 	void DrawLine(int x0, int y0, int x1, int y1, uint32_t color);
 
-// 	void display_wireframe(triangle_t triangle);
-// 	void display_faces(triangle_t triangle);
-// 	void display_vertices(triangle_t triangle);
-// 	bool backface_culling(const vec4_t* transformed_vertices);
+	void DisplayWireFrame(Triangle triangle);
+	void DisplayFaces(Triangle triangle);
+	void DisplayVertices(Triangle triangle);
+	//bool BackfaceCulling(const vec4_t* transformed_vertices);
 
 };
 

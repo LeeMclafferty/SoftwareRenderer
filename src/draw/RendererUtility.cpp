@@ -70,3 +70,23 @@ void RendererUtility::DrawLine(int x0, int y0, int x1, int y1, uint32_t color)
 		currentY += (float)yIncrement;
 	}
 }
+
+void RendererUtility::DisplayWireFrame(Triangle triangle)
+{
+
+}
+
+void RendererUtility::DisplayFaces(Triangle triangle)
+{
+
+}
+
+void RendererUtility::DisplayVertices(Triangle triangle)
+{
+
+}
+
+// bool RendererUtility::BackfaceCulling(const vec4_t* transformed_vertices)
+// {
+// 
+// }
