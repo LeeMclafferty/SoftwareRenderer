@@ -1,5 +1,8 @@
 #include "Engine.h"
-
+#include "Window.h"
+#include "render/Renderer.h"
+#include "InputHandler.h"
+#include "Scene.h"
 
 Engine* Engine::engineInstance = nullptr;
 

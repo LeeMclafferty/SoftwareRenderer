@@ -155,21 +155,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\InputHandler.cpp" />
-    <ClCompile Include="src\draw\RendererUtility.cpp" />
-    <ClCompile Include="src\draw\Renderer.cpp" />
-    <ClCompile Include="src\Engine.cpp" />
+    <ClCompile Include="src\render\RendererStateManager.cpp" />
+    <ClCompile Include="src\core\Scene.cpp" />
+    <ClCompile Include="src\mesh\Face.cpp" />
+    <ClCompile Include="src\mesh\Mesh.cpp" />
+    <ClCompile Include="src\camera\Camera.cpp" />
+    <ClCompile Include="src\core\InputHandler.cpp" />
+    <ClCompile Include="src\render\RendererUtility.cpp" />
+    <ClCompile Include="src\render\Renderer.cpp" />
+    <ClCompile Include="src\core\Engine.cpp" />
     <ClCompile Include="src\SoftwareRendererProject.cpp" />
-    <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\core\Window.cpp" />
     <ClCompile Include="src\primatives\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\draw\RendererUtility.h" />
-    <ClInclude Include="src\InputHandler.h" />
+    <ClInclude Include="src\render\RendererStateManager.h" />
+    <ClInclude Include="src\core\Scene.h" />
+    <ClInclude Include="src\matrix\Matrix.h" />
+    <ClInclude Include="src\mesh\Face.h" />
+    <ClInclude Include="src\mesh\Mesh.h" />
+    <ClInclude Include="src\camera\Camera.h" />
+    <ClInclude Include="src\render\RendererUtility.h" />
+    <ClInclude Include="src\core\InputHandler.h" />
     <ClInclude Include="src\colors\Colors.h" />
-    <ClInclude Include="src\draw\Renderer.h" />
-    <ClInclude Include="src\Engine.h" />
-    <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\render\Renderer.h" />
+    <ClInclude Include="src\core\Engine.h" />
+    <ClInclude Include="src\vectors\VectorMath.h" />
+    <ClInclude Include="src\vectors\VectorTypes.h" />
+    <ClInclude Include="src\core\Window.h" />
     <ClInclude Include="src\primatives\Triangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

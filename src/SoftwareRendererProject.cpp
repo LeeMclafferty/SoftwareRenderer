@@ -1,6 +1,6 @@
 #include <iostream>
 #include "SDL.h"
-#include "engine.h"
+#include "core/Engine.h"
 
 int main(int argc, char* args[])
 {
