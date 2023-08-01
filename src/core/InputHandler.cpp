@@ -1,21 +1,25 @@
 #include <iostream>
 #include "InputHandler.h"
-#include "render/Renderer.h"
 #include "render/RendererStateManager.h"
+#include "render/Renderer.h"
+#include "Engine.h"
+#include "Scene.h"
+#include "camera/Camera.h"
 
 InputHandler::InputHandler()
-	:engine(Engine::GetInstance())
+	:engine(std::make_shared<Engine>(Engine::GetInstance()))
 {
 
 }
 
 void InputHandler::ProcessInput()
 {
-	if (!engine)
-	{
-		std::cout << "Could not process input, no engine found.\n";
-		return;
-	}
+	std::shared_ptr<Engine> spEngine = engine.lock();
+	std::shared_ptr<Renderer> spRenderer = spEngine->GetRenderer().lock();
+	std::shared_ptr<Scene> spScene = spEngine->GetScene().lock();
+	std::shared_ptr<Camera> spCamera = spScene->GetViewportCamera().lock();
+
+	if (!spEngine || !spRenderer || !spScene) return;
 
 	SDL_Event event;
 	SDL_PollEvent(&event);
@@ -23,55 +27,53 @@ void InputHandler::ProcessInput()
 	switch (event.type)
 	{
 	case SDL_QUIT:
-		Engine::GetInstance()->SetIsRunning(false);
+		spEngine->SetIsRunning(false);
 		break;
 	case SDL_KEYDOWN:
 		if (event.key.keysym.sym == SDLK_ESCAPE)
 		{
-			engine->SetIsRunning(false);
+			spEngine->SetIsRunning(false);
 		}
 		else if (event.key.keysym.sym == SDLK_1)
 		{
-			engine->GetRenderer()->SetState(RenderState::FacesOnly);
+			spRenderer->SetState(RenderState::FacesOnly);
 		}
 		else if (event.key.keysym.sym == SDLK_2)
 		{
-			engine->GetRenderer()->SetState(RenderState::WireFrame);
+			spRenderer->SetState(RenderState::WireFrame);
 		}
 		else if (event.key.keysym.sym == SDLK_3)
 		{
-			engine->GetRenderer()->SetState(RenderState::VerticesOnly);
+			spRenderer->SetState(RenderState::VerticesOnly);
 		}
 		else if (event.key.keysym.sym == SDLK_4)
 		{
-			engine->GetRenderer()->SetState(RenderState::VerticesWireFrame);
+			spRenderer->SetState(RenderState::VerticesWireFrame);
 		}
 		else if (event.key.keysym.sym == SDLK_5)
 		{
-			engine->GetRenderer()->SetState(RenderState::WireFrameFaces);
+			spRenderer->SetState(RenderState::WireFrameFaces);
 		}
 		else if (event.key.keysym.sym == SDLK_6)
 		{
-			engine->GetRenderer()->SetState(RenderState::All);
+			spRenderer->SetState(RenderState::All);
 		}
 		else if (event.key.keysym.sym == SDLK_i)
 		{
-			Camera* camera = engine->GetScene()->GetViewportCamera();
-			if (camera)
+			if (spCamera)
 			{
-				camera->IncreaseZoom(1.f);
+				spCamera->IncreaseZoom(1.f);
 			}
 		}
 		else if (event.key.keysym.sym == SDLK_o)
 		{
-			Camera* camera = engine->GetScene()->GetViewportCamera();
-			if (camera)
+			if (spCamera)
 			{
-				camera->DecreaseZoom(1.f);
+				spCamera->DecreaseZoom(1.f);
 			}
 		}
-		break;
-	default:
-		break;
+			break;
+		default:
+			break;
 	}
 }

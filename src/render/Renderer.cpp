@@ -1,17 +1,17 @@
-#include "draw/Renderer.h"
 #include <stdio.h>
+#include "Renderer.h"
 #include "core/Engine.h"
+#include "core/Scene.h"
 #include "core/Window.h"
 #include "colors/Colors.h"
 #include "mesh/Mesh.h"
-#include "vectors/VectorMath.h"
 #include "matrix/Matrix.h"
+#include "vectors/VectorMath.h"
 
 Renderer::Renderer()
-	:renderer(nullptr), fps(30), targetFrameTime(1000 / fps), colorBufferTexture(nullptr), utility(this), 
+	:renderer(nullptr), fps(30), targetFrameTime(1000 / fps), colorBufferTexture(nullptr), utility(), 
 	scene(Engine::GetInstance()->GetScene())
 {
-
 }
 
 Renderer::~Renderer()
@@ -19,11 +19,15 @@ Renderer::~Renderer()
 	SDL_DestroyRenderer(renderer);
 }
 
-
 bool Renderer::CreateRenderer()
 {
-	SDL_Window* window = Engine::GetInstance()->GetWindow()->GetSdlWindow();
-	renderer = SDL_CreateRenderer(window, -1, 0);
+	Window* window = Engine::GetInstance()->GetWindow();
+	if (window)
+	{
+		SDL_Window* window = window->GetSdlWindow();
+	}
+
+	renderer = SDL_CreateRenderer(window->GetSdlWindow(), -1, 0);
 	if (!renderer)
 	{
 		fprintf(stderr, "Error Creating SDL Renderer. \n");
@@ -57,14 +61,18 @@ void Renderer::RenderColorBuffer()
 	}
 }
 
-const int Renderer::GetWindowHeight() const
+int Renderer::GetWindowHeight() const
 {
-	return 	Engine::GetInstance()->GetWindow()->GetHeight();
+	std::shared_ptr<Window> spWindow = Engine::GetInstance()->GetWindow().lock();
+	if (!spWindow) return 0;
+	return 	spWindow->GetHeight();
 }
 
-const int Renderer::GetWindowWidth() const
+int Renderer::GetWindowWidth() const
 {
-	return Engine::GetInstance()->GetWindow()->GetWidth();
+	std::shared_ptr<Window> spWindow = Engine::GetInstance()->GetWindow().lock();
+	if (!spWindow) return 0;
+	return 	spWindow->GetWidth();
 }
 
 void Renderer::AddToColorBuffer(int index, uint32_t color)
@@ -81,7 +89,8 @@ void Renderer::AddToColorBuffer(int index, uint32_t color)
 
 void Renderer::Update()
 {
-	if (!scene)
+	std::shared_ptr<Scene> spScene = scene.lock();
+	if (!spScene)
 	{
 		std::cout << "No scene found.\n";
 		return;
@@ -93,10 +102,10 @@ void Renderer::Update()
 
 	/* ======================= NEEDS TO BE ABSTRACTED FROM HERE ===============================*/
 	// Reset to NULL on every update;
-	scene->EmptyTrianlgesToRender();
+	spScene->EmptyTrianlgesToRender();
 
 	/* I think later this can loop over all meshes in scene and render each. */
-	Mesh* meshToRender = scene->GetMesh("Default Cube");
+	std::shared_ptr<Mesh> meshToRender(std::make_shared<Mesh>());
 	if (!meshToRender)
 	{
 		std::cout << "Mesh to render is null\n";
@@ -137,9 +146,9 @@ void Renderer::Update()
 			transformedVertex = translationMatrix * transformedVertex;
 
 			// Translate vertex away from camera
-			if (scene->GetViewportCamera())
+			if (spScene->GetViewportCamera())
 			{
-				transformedVertex.z += scene->GetViewportCamera()->GetCameraLocation().z;
+				transformedVertex.z += spScene->GetViewportCamera()->GetCameraLocation().z;
 			}
 			transformedVertices[j] = transformedVertex;
 		}
@@ -160,8 +169,8 @@ void Renderer::Update()
 				coordinatesToProject[j] = utility.Project(transformedVertices[j]);
 
 				/* Move to middle of screen */
-				coordinatesToProject[j].x += (Engine::GetInstance()->GetWindow()->GetWidth() / 2);
-				coordinatesToProject[j].y += (Engine::GetInstance()->GetWindow()->GetHeight() / 2);
+				coordinatesToProject[j].x += (GetWindowWidth() / 2);
+				coordinatesToProject[j].y += (GetWindowHeight() / 2);
 			}
 
 			/* Replace with a z buffer */
@@ -176,17 +185,17 @@ void Renderer::Update()
 				currentFace.GetColor(),
 				faceDepth
 			);
-			scene->AddTriangleToRender(triangleToProject);
+			spScene->AddTriangleToRender(triangleToProject);
 		}
 
 		/* Replace with a z buffer */
-		for (int i = 0; i < scene->GetTrianglesToRender().size() - 1; i++)
+		for (int i = 0; i < spScene->GetTrianglesToRender().size() - 1; i++)
 		{
-			for (int j = i; j < scene->GetTrianglesToRender().size() - 1; j++)
+			for (int j = i; j < spScene->GetTrianglesToRender().size() - 1; j++)
 			{
-				if (scene->GetTrianglesToRender()[i].GetAvgVertexDepth() < scene->GetTrianglesToRender()[j].GetAvgVertexDepth())
+				if (spScene->GetTrianglesToRender()[i].GetAvgVertexDepth() < spScene->GetTrianglesToRender()[j].GetAvgVertexDepth())
 				{
-					scene->SwapTriangleRenderOrder(i, j);
+					spScene->SwapTriangleRenderOrder(i, j);
 				}
 			}
 		}

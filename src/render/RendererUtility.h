@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
 #include "SDL.h"
-#include "primatives/Triangle.h"
 #include "vectors/VectorTypes.h"
+#include "primatives/Triangle.h"
 
 class Renderer;
 
@@ -22,7 +22,7 @@ public:
 	void DisplayFaces(Triangle triangle);
 	void DisplayVertices(Triangle triangle);
 private:
-	std::unique_ptr<Renderer> owner;
+	Renderer* owner;
 
 	bool ShouldCullFace(const std::array<Vector4D, 3>& transformedVertices);
 	Vector2D Project(Vector3D vec);

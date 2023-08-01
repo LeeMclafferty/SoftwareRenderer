@@ -2,14 +2,14 @@
 #include "Window.h"
 #include "render/Renderer.h"
 #include "InputHandler.h"
-#include "Scene.h"
-
-Engine* Engine::engineInstance = nullptr;
 
 Engine::Engine()
-	:bisRunning(false)
+	: bisRunning(false),
+	window(std::make_shared<Window>()),
+	renderer(std::make_shared<Renderer>()),
+	inputHandler(std::make_shared<InputHandler>()),
+	scene(std::make_shared<Scene>())
 {
-
 }
 
 Engine::~Engine()
@@ -17,29 +17,15 @@ Engine::~Engine()
 	SDL_Quit();
 }
 
-Engine* Engine::GetInstance()
-{
-	if (!engineInstance)
-	{
-		engineInstance = new Engine();
-	}
-	else
-	{
-		return engineInstance;
-	}
-
-	return engineInstance;
-}
-
 void Engine::Run()
 {
-	bisRunning = window.InitializeWindow();
-	renderer.Setup();
-	
+	bisRunning = window->InitializeWindow();
+	renderer->Setup();
+
 	while (bisRunning)
 	{
-		inputHandler.ProcessInput();
-		renderer.Update();
-		renderer.Render();
+		inputHandler->ProcessInput();
+		renderer->Update();
+		renderer->Render();
 	}
 }

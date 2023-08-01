@@ -1,33 +1,33 @@
 #pragma once
 
-#include <iostream>
+#include <memory>
 #include "SDL.h"
 
-/* Singleton Class*/
+class Window;
+class Renderer;
+class InputHandler;
+class Scene;
+
 class Engine
 {
 public:
-	static Engine* GetInstance();
-	
+	Engine();
+	~Engine();
+
 	void Run();
-	
-	class Window* GetWindow() { return &window; }
-	class Renderer* GetRenderer()  { return &renderer; }
-	class Scene* GetScene()  { return &scene; }
+
+	std::shared_ptr<Window> GetWindow() const { return window; }
+	std::shared_ptr<Renderer> GetRenderer() const { return renderer; }
+	std::shared_ptr<Scene> GetScene() const { return scene; }
 
 	bool IsRunning() const { return bisRunning; }
 	void SetIsRunning(bool newState) { bisRunning = newState; }
 
 private:
-	Engine();
-	~Engine();
-	static Engine* engineInstance;
-
-	class Window window;
-	class Renderer renderer;
-	class InputHandler inputHandler;
-	class Scene scene;
+	std::shared_ptr<Window> window;
+	std::shared_ptr<Renderer> renderer;
+	std::shared_ptr<InputHandler> inputHandler;
+	std::shared_ptr<Scene> scene;
 
 	bool bisRunning;
 };
-

@@ -22,7 +22,8 @@ public:
 	void SetFaceColor(uint32_t color) { faceColor = color; }
 
 private:
-	class RendererUtility* rendererUtility;
+	std::shared_ptr<RendererUtility> rendererUtility;
+
 	void SortVerticesAsc(Vector2D& vecA, Vector2D& vecB, Vector2D& vecC);
 	void FillFlatTop(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color);
 	void FillFlatBottom(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color);

@@ -2,6 +2,8 @@
 #include "render/RendererUtility.h"
 #include "render/Renderer.h"
 #include "vectors/VectorMath.h"
+#include "core/Scene.h"
+#include "core/Engine.h"
 
 RendererUtility::RendererUtility()
 	:owner(nullptr)
@@ -10,7 +12,7 @@ RendererUtility::RendererUtility()
 }
 
 RendererUtility::RendererUtility(Renderer* renderer)
-	:owner(renderer)
+:owner(renderer)
 {
 
 }
@@ -76,21 +78,19 @@ void RendererUtility::DrawLine(int x0, int y0, int x1, int y1, uint32_t color)
 void RendererUtility::DisplayWireFrame(Triangle triangle)
 {
 	triangle.DrawTriangleWireFrame(
-		triangle.GetCoordinates()[0].x, triangle.GetCoordinates()[0].y,
-		triangle.GetCoordinates()[1].x, triangle.GetCoordinates()[1].y,
-		triangle.GetCoordinates()[2].x, triangle.GetCoordinates()[2].y,
+		Vector2D(triangle.GetCoordinates()[0].x, triangle.GetCoordinates()[0].y),
+		Vector2D(triangle.GetCoordinates()[1].x, triangle.GetCoordinates()[1].y),
+		Vector2D(triangle.GetCoordinates()[2].x, triangle.GetCoordinates()[2].y),
 		BLACK
 	);
 }
 
 void RendererUtility::DisplayFaces(Triangle triangle)
 {
-	triangle.DrawFilledTriangle(
-		triangle.GetCoordinates()[0].x, triangle.GetCoordinates()[0].y,
-		triangle.GetCoordinates()[1].x, triangle.GetCoordinates()[1].y,
-		triangle.GetCoordinates()[2].x, triangle.GetCoordinates()[2].y,
-		triangle.GetFaceColor()
-	);
+	Vector2D v1(triangle.GetCoordinates()[0].x, triangle.GetCoordinates()[0].y);
+	Vector2D v2(triangle.GetCoordinates()[1].x, triangle.GetCoordinates()[1].y);
+	Vector2D v3(triangle.GetCoordinates()[2].x, triangle.GetCoordinates()[2].y);
+	triangle.DrawFilledTriangle( v1, v2, v3, triangle.GetFaceColor() );
 }
 
 /* Draw Rectangle instead of pixel just so the vertices look bigger */
@@ -104,7 +104,7 @@ void RendererUtility::DisplayVertices(Triangle triangle)
 bool RendererUtility::ShouldCullFace(const std::array<Vector4D, 3>& transformedVertices)
 {
 	Camera* camera = Engine::GetInstance()->GetScene()->GetViewportCamera();
-	if (!camera) return;
+	if (!camera) return false;
 
 	Vector3D vec_a = VectorMath::Vector4ToVetor3(transformedVertices[0]);
 	Vector3D vec_b = VectorMath::Vector4ToVetor3(transformedVertices[2]);

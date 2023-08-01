@@ -1,13 +1,12 @@
 #include "Scene.h"
-#include "primatives/Triangle.h"
 #include "camera/Camera.h"
 #include "mesh/Mesh.h"
 
 Scene::Scene()
-	:viewportCamera(1)
+	:viewportCamera(std::make_shared<Camera>(1)), testingMesh(std::make_shared<Mesh>())
 {
-	AddToMeshes(TestingMesh);
-	AddToCameras(viewportCamera);
+	AddToMeshes(*testingMesh);
+	AddToCameras(*viewportCamera);
 }
 
 void Scene::AddTriangleToRender(Triangle tri)
@@ -22,22 +21,20 @@ void Scene::EmptyTrianlgesToRender()
 
 void Scene::SwapTriangleRenderOrder(int aIndex, int bIndex)
 {
-	Triangle temp = trianglesToRender[aIndex];
-	trianglesToRender[aIndex] = trianglesToRender[bIndex];
-	trianglesToRender[bIndex] = temp;
+	std::swap(trianglesToRender[aIndex], trianglesToRender[bIndex]);
 }
 
-Camera* Scene::GetCamera(int cameraId)
+std::weak_ptr<Camera> Scene::GetCamera(int cameraId)
 {
 	auto search = cameraInScene.find(cameraId);
 
 	if (search != cameraInScene.end())
 	{
-		return search->second.get();
+		return std::weak_ptr<Camera>(search->second); // No .get() call here
 	}
 	else
 	{
-		return nullptr;
+		return std::weak_ptr<Camera>(); // Returns an empty weak_ptr
 	}
 }
 

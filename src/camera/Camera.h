@@ -1,6 +1,5 @@
 #pragma once
 #include "SDL.h"
-#include "core/Engine.h"
 #include "vectors/VectorTypes.h"
 
 class Camera

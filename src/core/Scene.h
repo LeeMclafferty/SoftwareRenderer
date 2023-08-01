@@ -2,6 +2,11 @@
 #include <vector>
 #include <unordered_map>
 #include <string.h>
+#include <memory>
+#include "primatives/Triangle.h"
+#include "camera/Camera.h"
+//class Camera;
+class Mesh;
 
 class Scene
 {
@@ -14,8 +19,8 @@ public:
 	void SwapTriangleRenderOrder(int aIndex, int bIndex);
 
 	const std::unordered_map<int, std::shared_ptr<Camera>> GetAllCameras() const { return cameraInScene; }
-	Camera* GetViewportCamera() { return GetCamera(viewportCamera.GetId()); }
-	Camera* GetCamera(int cameraId);
+	std::weak_ptr<Camera> GetViewportCamera() { return GetCamera(viewportCamera->GetId()); }
+	std::weak_ptr<Camera> GetCamera(int cameraId);
 	void AddToCameras(const Camera& cam);
 
 	std::unordered_map<std::string, std::shared_ptr<Mesh>> GetAllMeshes() const { return meshesInScene; }
@@ -27,7 +32,7 @@ private:
 	std::unordered_map<int, std::shared_ptr<Camera>> cameraInScene;
 	std::unordered_map<std::string, std::shared_ptr<Mesh>> meshesInScene;
 	
-	class Camera viewportCamera;
-	class Mesh TestingMesh;
+	std::shared_ptr<Camera> viewportCamera;
+	std::shared_ptr<Mesh> testingMesh;
 };
 

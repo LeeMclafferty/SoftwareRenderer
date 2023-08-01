@@ -4,9 +4,8 @@
 
 int main(int argc, char* args[])
 {
-    static Engine* renderEngine = Engine::GetInstance();
-    renderEngine->Run();
-    free(renderEngine);
+    Engine engine;
+    engine.Run();
     return 0;
 }
 

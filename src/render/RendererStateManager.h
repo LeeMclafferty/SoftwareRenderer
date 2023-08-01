@@ -1,5 +1,5 @@
 #pragma once
-#include "Renderer.h"
+
 enum class RenderState
 {
 	VerticesOnly,
@@ -13,13 +13,12 @@ enum class RenderState
 class RendererStateManager
 {
 public:
-	friend Renderer;
 	RendererStateManager();
 	RendererStateManager(RenderState state);
+	void SetRenderState(RenderState newState) { renderState = newState; }
+	const RenderState GetRenderState() const { return renderState; }
 
 private:
-	const RenderState GetRenderState() const { return renderState; }
-	void SetRenderState(RenderState newState) { renderState = newState; }
 	RenderState renderState;
 };
 

@@ -1,6 +1,6 @@
 #pragma once
-#include "SDL.h"
-#include "Engine.h"
+
+class Engine;
 
 class InputHandler
 {
@@ -9,6 +9,6 @@ public:
 	void ProcessInput();
 
 private:
-	Engine* engine;
+	std::weak_ptr<Engine> engine;
 };
 

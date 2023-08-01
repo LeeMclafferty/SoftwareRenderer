@@ -11,10 +11,10 @@ public:
 	Mesh();
 	Mesh(char* file, std::string meshName);
 
-	const std::vector<Vector3D> GetVertices() const { return vertices; }
-	const std::vector<Face> GetFaces() const { return faces; }
+	const std::vector<Vector3D>& GetVertices() const { return vertices; }
+	const std::vector<Face>& GetFaces() const { return faces; }
 
-	Vector3D GetRotation() const { return rotation; }
+	const Vector3D GetRotation() const { return rotation; }
 	const Vector3D GetScale() const { return scale; }
 	const Vector3D GetTranslation() const { return translation; }
 
