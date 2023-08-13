@@ -3,10 +3,10 @@
 #include "mesh/Mesh.h"
 
 Scene::Scene()
-	:viewportCamera(std::make_shared<Camera>(1)), testingMesh(std::make_shared<Mesh>())
+	:viewportCamera(1), testingMesh()
 {
-	AddToMeshes(*testingMesh);
-	AddToCameras(*viewportCamera);
+	AddToMeshes(&testingMesh);
+	AddToCameras(&viewportCamera);
 }
 
 void Scene::AddTriangleToRender(Triangle tri)
@@ -24,50 +24,50 @@ void Scene::SwapTriangleRenderOrder(int aIndex, int bIndex)
 	std::swap(trianglesToRender[aIndex], trianglesToRender[bIndex]);
 }
 
-std::weak_ptr<Camera> Scene::GetCamera(int cameraId)
+Camera* Scene::GetCamera(int cameraId)
 {
 	auto search = cameraInScene.find(cameraId);
 
 	if (search != cameraInScene.end())
 	{
-		return std::weak_ptr<Camera>(search->second); // No .get() call here
+		return search->second; // Return a reference to the Camera
 	}
 	else
 	{
-		return std::weak_ptr<Camera>(); // Returns an empty weak_ptr
+		throw std::runtime_error("Camera not found");
 	}
 }
 
-void Scene::AddToCameras(const Camera& cam)
+void Scene::AddToCameras(Camera* cam)
 {
-	auto result = cameraInScene.emplace(cam.GetId(), std::make_shared<Camera>(cam));
+	auto result = cameraInScene.emplace(cam->GetId(), cam);
 
 	if (result.second == false)
 	{
-		std::cout << "Camera ID " << cam.GetId() << " already exists in the map.\n";
+		std::cout << "Camera ID " << cam->GetId() << " already exists in the map.\n";
 	}
 }
 
-Mesh* Scene::GetMesh(const std::string& meshKey) const
+ Mesh* Scene::GetMesh(const std::string& meshKey) const
 {
 	auto search = meshesInScene.find(meshKey);
 
 	if (search != meshesInScene.end())
 	{
-		return search->second.get();
+		return search->second; // Return a reference to the Mesh
 	}
-	else 
+	else
 	{
-		return nullptr;
+		throw std::runtime_error("Mesh not found");
 	}
 }
 
-void Scene::AddToMeshes(const Mesh& mesh)
+void Scene::AddToMeshes(Mesh* mesh)
 {
-	auto result = meshesInScene.emplace(mesh.GetName(), std::make_shared<Mesh>(mesh));
+	auto result = meshesInScene.emplace(mesh->GetName(), mesh);
 
 	if (result.second == false)
 	{
-		std::cout << "Mesh " << mesh.GetName() << " already exists in the map.\n";
+		std::cout << "Mesh " << mesh->GetName() << " already exists in the map.\n";
 	}
 }

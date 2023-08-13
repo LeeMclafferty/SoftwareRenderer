@@ -5,14 +5,14 @@
 #include "core/Scene.h"
 #include "core/Engine.h"
 
-RendererUtility::RendererUtility()
-	:owner(nullptr)
+RendererUtility::RendererUtility(Renderer* renderer)
+ :owner(renderer)
 {
 
 }
 
-RendererUtility::RendererUtility(Renderer* renderer)
-:owner(renderer)
+RendererUtility::RendererUtility()
+ :owner(nullptr)
 {
 
 }
@@ -103,7 +103,10 @@ void RendererUtility::DisplayVertices(Triangle triangle)
 
 bool RendererUtility::ShouldCullFace(const std::array<Vector4D, 3>& transformedVertices)
 {
-	Camera* camera = Engine::GetInstance()->GetScene()->GetViewportCamera();
+	if (!owner) return false;
+	
+	Camera* camera = owner->GetScene()->GetViewportCamera();
+
 	if (!camera) return false;
 
 	Vector3D vec_a = VectorMath::Vector4ToVetor3(transformedVertices[0]);

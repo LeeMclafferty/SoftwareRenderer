@@ -7,14 +7,14 @@
 #include "render/RendererUtility.h"
 
 Triangle::Triangle()
-	:rendererUtility(std::make_shared<RendererUtility>()), coordinates({{Vector2D(100.f, 20.f), Vector2D(200.f, 20.f), Vector2D(150.f, 100.f)}}), faceColor(WHITE),
+	:rendererUtility(), coordinates({{Vector2D(100.f, 20.f), Vector2D(200.f, 20.f), Vector2D(150.f, 100.f)}}), faceColor(WHITE),
 	avgVertexDepth(0.f)
 {
 
 }
 
 Triangle::Triangle(std::array<Vector2D, 3> coords, int32_t color, float depth)
-	:rendererUtility(std::make_shared<RendererUtility>()), coordinates(coords), faceColor(color), avgVertexDepth(depth)
+	:rendererUtility(), coordinates(coords), faceColor(color), avgVertexDepth(depth)
 {
 
 }

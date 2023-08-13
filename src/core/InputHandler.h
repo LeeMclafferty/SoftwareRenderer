@@ -5,10 +5,11 @@ class Engine;
 class InputHandler
 {
 public:
-	InputHandler();
+	InputHandler(Engine* renderEngine);
 	void ProcessInput();
 
 private:
-	std::weak_ptr<Engine> engine;
-};
+	Engine* engine;
 
+	void CheckDependencies();
+};

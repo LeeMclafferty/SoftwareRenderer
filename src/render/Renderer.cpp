@@ -9,8 +9,7 @@
 #include "vectors/VectorMath.h"
 
 Renderer::Renderer()
-	:renderer(nullptr), fps(30), targetFrameTime(1000 / fps), colorBufferTexture(nullptr), utility(), 
-	scene(Engine::GetInstance()->GetScene())
+	:renderer(nullptr), fps(30), targetFrameTime(1000 / fps), colorBufferTexture(nullptr), utility(this)
 {
 }
 
@@ -21,13 +20,11 @@ Renderer::~Renderer()
 
 bool Renderer::CreateRenderer()
 {
-	Window* window = Engine::GetInstance()->GetWindow();
-	if (window)
-	{
-		SDL_Window* window = window->GetSdlWindow();
-	}
+	if (!GetWindow()) return false;
+	
+	SDL_Window* window = GetWindow()->GetSdlWindow();
+	renderer = SDL_CreateRenderer(GetWindow()->GetSdlWindow(), -1, 0);
 
-	renderer = SDL_CreateRenderer(window->GetSdlWindow(), -1, 0);
 	if (!renderer)
 	{
 		fprintf(stderr, "Error Creating SDL Renderer. \n");
@@ -61,18 +58,16 @@ void Renderer::RenderColorBuffer()
 	}
 }
 
-int Renderer::GetWindowHeight() const
+int Renderer::GetWindowHeight()
 {
-	std::shared_ptr<Window> spWindow = Engine::GetInstance()->GetWindow().lock();
-	if (!spWindow) return 0;
-	return 	spWindow->GetHeight();
+	if (!GetWindow()) return 0;
+	return 	GetWindow()->GetHeight();
 }
 
-int Renderer::GetWindowWidth() const
+int Renderer::GetWindowWidth()
 {
-	std::shared_ptr<Window> spWindow = Engine::GetInstance()->GetWindow().lock();
-	if (!spWindow) return 0;
-	return 	spWindow->GetWidth();
+	if (!GetWindow()) return 0;
+	return 	GetWindow()->GetWidth();
 }
 
 void Renderer::AddToColorBuffer(int index, uint32_t color)
@@ -87,10 +82,26 @@ void Renderer::AddToColorBuffer(int index, uint32_t color)
 	}
 }
 
+void Renderer::SetEngine(Engine* renderEngine)
+{
+	engine = renderEngine;
+}
+
+Window* Renderer::GetWindow()
+{
+	if (!engine) return nullptr;
+	return engine->GetWindow();
+}
+
+Scene* Renderer::GetScene()
+{
+	if (!engine) return nullptr;
+	return engine->GetScene();
+}
+
 void Renderer::Update()
 {
-	std::shared_ptr<Scene> spScene = scene.lock();
-	if (!spScene)
+	if (!GetScene())
 	{
 		std::cout << "No scene found.\n";
 		return;
@@ -102,7 +113,7 @@ void Renderer::Update()
 
 	/* ======================= NEEDS TO BE ABSTRACTED FROM HERE ===============================*/
 	// Reset to NULL on every update;
-	spScene->EmptyTrianlgesToRender();
+	GetScene()->EmptyTrianlgesToRender();
 
 	/* I think later this can loop over all meshes in scene and render each. */
 	std::shared_ptr<Mesh> meshToRender(std::make_shared<Mesh>());
@@ -112,10 +123,10 @@ void Renderer::Update()
 		return;
 	}
 	
-// 	float xRotation = meshToRender->GetRotation().x;
-// 	float yRotation = meshToRender->GetRotation().y;
-// 	float zRotation = meshToRender->GetRotation().z;
-// 	meshToRender->SetRotation(Vector3D(xRotation + .01, yRotation + .01, zRotation + .01));
+	// float xRotation = meshToRender->GetRotation().x;
+	// float yRotation = meshToRender->GetRotation().y;
+	// float zRotation = meshToRender->GetRotation().z;
+	// meshToRender->SetRotation(Vector3D(xRotation + .01, yRotation + .01, zRotation + .01));
 	
 	Matrix4x4 scaleMatrix = MatrixMath::MakeScaleMatrix(meshToRender->GetScale());
 	Matrix4x4 rotationMatrix_X = MatrixMath::MakeRotationMatrix_X(meshToRender->GetRotation().x);
@@ -146,10 +157,9 @@ void Renderer::Update()
 			transformedVertex = translationMatrix * transformedVertex;
 
 			// Translate vertex away from camera
-			if (spScene->GetViewportCamera())
-			{
-				transformedVertex.z += spScene->GetViewportCamera()->GetCameraLocation().z;
-			}
+
+			transformedVertex.z += GetScene()->GetViewportCamera()->GetCameraLocation().z;
+			
 			transformedVertices[j] = transformedVertex;
 		}
 
@@ -185,17 +195,17 @@ void Renderer::Update()
 				currentFace.GetColor(),
 				faceDepth
 			);
-			spScene->AddTriangleToRender(triangleToProject);
+			GetScene()->AddTriangleToRender(triangleToProject);
 		}
 
 		/* Replace with a z buffer */
-		for (int i = 0; i < spScene->GetTrianglesToRender().size() - 1; i++)
+		for (int i = 0; i < GetScene()->GetTrianglesToRender().size() - 1; i++)
 		{
-			for (int j = i; j < spScene->GetTrianglesToRender().size() - 1; j++)
+			for (int j = i; j < GetScene()->GetTrianglesToRender().size() - 1; j++)
 			{
-				if (spScene->GetTrianglesToRender()[i].GetAvgVertexDepth() < spScene->GetTrianglesToRender()[j].GetAvgVertexDepth())
+				if (GetScene()->GetTrianglesToRender()[i].GetAvgVertexDepth() < GetScene()->GetTrianglesToRender()[j].GetAvgVertexDepth())
 				{
-					spScene->SwapTriangleRenderOrder(i, j);
+					GetScene()->SwapTriangleRenderOrder(i, j);
 				}
 			}
 		}

@@ -2,10 +2,10 @@
 #include <vector>
 #include <unordered_map>
 #include <string.h>
-#include <memory>
-#include "primatives/Triangle.h"
 #include "camera/Camera.h"
-//class Camera;
+#include "primatives/Triangle.h"
+#include "mesh/Mesh.h"
+
 class Mesh;
 
 class Scene
@@ -18,21 +18,21 @@ public:
 	void EmptyTrianlgesToRender();
 	void SwapTriangleRenderOrder(int aIndex, int bIndex);
 
-	const std::unordered_map<int, std::shared_ptr<Camera>> GetAllCameras() const { return cameraInScene; }
-	std::weak_ptr<Camera> GetViewportCamera() { return GetCamera(viewportCamera->GetId()); }
-	std::weak_ptr<Camera> GetCamera(int cameraId);
-	void AddToCameras(const Camera& cam);
+	std::unordered_map<int, Camera*> GetAllCameras() const { return cameraInScene; }
+	Camera* GetViewportCamera() { return &viewportCamera; }
+	Camera* GetCamera(int cameraId);
+	void AddToCameras(Camera* cam);
 
-	std::unordered_map<std::string, std::shared_ptr<Mesh>> GetAllMeshes() const { return meshesInScene; }
-	class Mesh* GetMesh(const std::string& meshKey) const;
-	void AddToMeshes(const Mesh& mesh);
+	std::unordered_map<std::string, Mesh*> GetAllMeshes() const { return meshesInScene; }
+	Mesh* GetMesh(const std::string& meshKey) const;
+	void AddToMeshes(Mesh* mesh);
 
 private:
 	std::vector<Triangle> trianglesToRender;
-	std::unordered_map<int, std::shared_ptr<Camera>> cameraInScene;
-	std::unordered_map<std::string, std::shared_ptr<Mesh>> meshesInScene;
+	std::unordered_map<int, Camera*> cameraInScene;
+	std::unordered_map<std::string, Mesh*> meshesInScene;
 	
-	std::shared_ptr<Camera> viewportCamera;
-	std::shared_ptr<Mesh> testingMesh;
+	Camera viewportCamera;
+	Mesh testingMesh;
 };
 

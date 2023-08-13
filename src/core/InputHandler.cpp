@@ -6,20 +6,19 @@
 #include "Scene.h"
 #include "camera/Camera.h"
 
-InputHandler::InputHandler()
-	:engine(std::make_shared<Engine>(Engine::GetInstance()))
+InputHandler::InputHandler(Engine* renderEngine)
+	:engine(renderEngine)
 {
-
+	CheckDependencies();
 }
 
 void InputHandler::ProcessInput()
 {
-	std::shared_ptr<Engine> spEngine = engine.lock();
-	std::shared_ptr<Renderer> spRenderer = spEngine->GetRenderer().lock();
-	std::shared_ptr<Scene> spScene = spEngine->GetScene().lock();
-	std::shared_ptr<Camera> spCamera = spScene->GetViewportCamera().lock();
+	Renderer* renderer = engine->GetRenderer();
+	Scene* scene = engine->GetScene();
+	Camera* camera = scene->GetViewportCamera();
 
-	if (!spEngine || !spRenderer || !spScene) return;
+	if (!engine || !renderer || !scene) return;
 
 	SDL_Event event;
 	SDL_PollEvent(&event);
@@ -27,53 +26,55 @@ void InputHandler::ProcessInput()
 	switch (event.type)
 	{
 	case SDL_QUIT:
-		spEngine->SetIsRunning(false);
+		engine->SetIsRunning(false);
 		break;
 	case SDL_KEYDOWN:
 		if (event.key.keysym.sym == SDLK_ESCAPE)
 		{
-			spEngine->SetIsRunning(false);
+			engine->SetIsRunning(false);
 		}
 		else if (event.key.keysym.sym == SDLK_1)
 		{
-			spRenderer->SetState(RenderState::FacesOnly);
+			renderer->SetState(RenderState::FacesOnly);
 		}
 		else if (event.key.keysym.sym == SDLK_2)
 		{
-			spRenderer->SetState(RenderState::WireFrame);
+			renderer->SetState(RenderState::WireFrame);
 		}
 		else if (event.key.keysym.sym == SDLK_3)
 		{
-			spRenderer->SetState(RenderState::VerticesOnly);
+			renderer->SetState(RenderState::VerticesOnly);
 		}
 		else if (event.key.keysym.sym == SDLK_4)
 		{
-			spRenderer->SetState(RenderState::VerticesWireFrame);
+			renderer->SetState(RenderState::VerticesWireFrame);
 		}
 		else if (event.key.keysym.sym == SDLK_5)
 		{
-			spRenderer->SetState(RenderState::WireFrameFaces);
+			renderer->SetState(RenderState::WireFrameFaces);
 		}
 		else if (event.key.keysym.sym == SDLK_6)
 		{
-			spRenderer->SetState(RenderState::All);
+			renderer->SetState(RenderState::All);
 		}
 		else if (event.key.keysym.sym == SDLK_i)
 		{
-			if (spCamera)
-			{
-				spCamera->IncreaseZoom(1.f);
-			}
+			camera->IncreaseZoom(1.f);
 		}
 		else if (event.key.keysym.sym == SDLK_o)
 		{
-			if (spCamera)
-			{
-				spCamera->DecreaseZoom(1.f);
-			}
+			camera->DecreaseZoom(1.f);
 		}
 			break;
 		default:
 			break;
+	}
+}
+
+void InputHandler::CheckDependencies()
+{
+	if (engine == nullptr)
+	{
+		throw std::invalid_argument("Engine must not be null");
 	}
 }

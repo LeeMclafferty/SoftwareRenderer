@@ -9,7 +9,7 @@ class Renderer;
 class RendererUtility
 {
 public:
-	friend class Renderer;
+
 	RendererUtility();
 	RendererUtility(Renderer* renderer);
 
@@ -21,12 +21,13 @@ public:
 	void DisplayWireFrame(Triangle triangle);
 	void DisplayFaces(Triangle triangle);
 	void DisplayVertices(Triangle triangle);
-private:
-	Renderer* owner;
-
+	
 	bool ShouldCullFace(const std::array<Vector4D, 3>& transformedVertices);
 	Vector2D Project(Vector3D vec);
 	Vector2D Project(Vector4D vec);
+private:
+	Renderer* owner;
+
 
 };
 

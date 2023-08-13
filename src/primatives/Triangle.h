@@ -4,8 +4,6 @@
 #include "SDL.h"
 #include "vectors/VectorTypes.h"
 
-class RendererUtility;
-
 class Triangle
 {
 public:
@@ -22,7 +20,7 @@ public:
 	void SetFaceColor(uint32_t color) { faceColor = color; }
 
 private:
-	std::shared_ptr<RendererUtility> rendererUtility;
+	class RendererUtility* rendererUtility;
 
 	void SortVerticesAsc(Vector2D& vecA, Vector2D& vecB, Vector2D& vecC);
 	void FillFlatTop(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color);

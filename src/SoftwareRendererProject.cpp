@@ -1,10 +1,18 @@
 #include <iostream>
 #include "SDL.h"
 #include "core/Engine.h"
+#include "core/Scene.h"
+#include "render/Renderer.h"
+#include "core/Window.h"
 
 int main(int argc, char* args[])
 {
-    Engine engine;
+    Window window;
+    Renderer renderer;
+    Scene scene;
+    Engine engine(&renderer, &scene, &window);
+    renderer.SetEngine(&engine);
+
     engine.Run();
     return 0;
 }

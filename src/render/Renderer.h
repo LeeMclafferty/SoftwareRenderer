@@ -18,13 +18,18 @@ public:
 	void Render();
 	void Setup();
 
-	int GetWindowHeight() const;
-	int GetWindowWidth() const;
+	int GetWindowHeight();
+	int GetWindowWidth();
 
 	void AddToColorBuffer(int index, uint32_t color);
 
-	const RenderState GetRenderState() const { return stateManager->GetRenderState(); }
-	void SetState(RenderState state) { stateManager->SetRenderState(state); }
+	RenderState GetRenderState() const { return stateManager.GetRenderState(); }
+	void SetState(RenderState state) { stateManager.SetRenderState(state); }
+
+	void SetEngine(class Engine* renderEngine);
+
+	class Window* GetWindow();
+	class Scene* GetScene();
 
 	/* TEMP */
 	bool backFaceCullingEnabled = true;
@@ -33,8 +38,7 @@ private:
 	bool CreateRenderer();
 
 	RendererUtility utility;
-	std::shared_ptr<RendererStateManager> stateManager;
-	std::weak_ptr<Scene> scene;
+	RendererStateManager stateManager;
 
 	int fps;
 	int targetFrameTime;
@@ -44,6 +48,6 @@ private:
 	void ClearColorBuffer(uint32_t color);
 	void RenderColorBuffer();
 
-
+	class Engine* engine;
 };
 

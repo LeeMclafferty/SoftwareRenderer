@@ -3,14 +3,14 @@
 #include "render/Renderer.h"
 #include "InputHandler.h"
 
-Engine::Engine()
-	: bisRunning(false),
-	window(std::make_shared<Window>()),
-	renderer(std::make_shared<Renderer>()),
-	inputHandler(std::make_shared<InputHandler>()),
-	scene(std::make_shared<Scene>())
+Engine::Engine(Renderer* mainRenderer, Scene* mainScene, Window* mainWindow)
+	: bisRunning(false), window(mainWindow),
+	renderer(mainRenderer), scene(mainScene),
+	inputHandler(this) 
 {
+	CheckDependencies();
 }
+
 
 Engine::~Engine()
 {
@@ -24,8 +24,34 @@ void Engine::Run()
 
 	while (bisRunning)
 	{
-		inputHandler->ProcessInput();
+		inputHandler.ProcessInput();
 		renderer->Update();
 		renderer->Render();
 	}
+}
+
+void Engine::CheckDependencies()
+{
+	if (renderer == nullptr)
+	{
+		throw std::invalid_argument("renderer must not be null");
+	}
+	else if (scene == nullptr)
+	{
+		throw std::invalid_argument("scene must not be null");
+	}
+	else if (window == nullptr)
+	{
+		throw std::invalid_argument("window must not be null");
+	}
+}
+
+void Engine::SetupRenderer()
+{
+
+}
+
+void Engine::SetupScene()
+{
+
 }

@@ -167,6 +167,7 @@
     <ClCompile Include="src\SoftwareRendererProject.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
     <ClCompile Include="src\primatives\Triangle.cpp" />
+    <ClCompile Include="src\vectors\VectorMath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\render\RendererStateManager.h" />
