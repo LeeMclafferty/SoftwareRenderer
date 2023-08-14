@@ -5,6 +5,7 @@
 #include "RendererStateManager.h"
 
 class Scene;
+class Mesh;
 
 class Renderer
 {
@@ -49,5 +50,6 @@ private:
 	void RenderColorBuffer();
 
 	class Engine* engine;
+	std::shared_ptr<Mesh> meshToRender;
 };
 

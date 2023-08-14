@@ -78,10 +78,10 @@ float VectorMath::FindReciprocalSlope(const Vector2D& coordA, const Vector2D& co
 	float changeX = coordB.x - coordA.x;
 	float changeY = coordB.y - coordA.y;
 
-	if (changeY == 0.0f)
-	{
-		throw std::invalid_argument("Slope is undefined for vertical line.");
-	}
+// 	if (changeY == 0.0f)
+// 	{
+// 		throw std::invalid_argument("Slope is undefined for vertical line.");
+// 	}
 	return changeX / changeY;
 }
 

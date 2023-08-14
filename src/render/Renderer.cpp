@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <memory.h>
 #include "Renderer.h"
 #include "core/Engine.h"
 #include "core/Scene.h"
@@ -9,7 +10,8 @@
 #include "vectors/VectorMath.h"
 
 Renderer::Renderer()
-	:renderer(nullptr), fps(30), targetFrameTime(1000 / fps), colorBufferTexture(nullptr), utility(this)
+	:renderer(nullptr), fps(30), targetFrameTime(1000 / fps), colorBufferTexture(nullptr), utility(this),
+	engine(nullptr)
 {
 }
 
@@ -109,24 +111,14 @@ void Renderer::Update()
 
 	SDL_Delay(targetFrameTime);
 
-	//utility.DrawTriangleWireFrame(20, 20, 100, 300, 200, 20, RED);
-
-	/* ======================= NEEDS TO BE ABSTRACTED FROM HERE ===============================*/
 	// Reset to NULL on every update;
 	GetScene()->EmptyTrianlgesToRender();
 
 	/* I think later this can loop over all meshes in scene and render each. */
-	std::shared_ptr<Mesh> meshToRender(std::make_shared<Mesh>());
 	if (!meshToRender)
 	{
-		std::cout << "Mesh to render is null\n";
-		return;
+		meshToRender = std::make_shared<Mesh>();
 	}
-	
-	// float xRotation = meshToRender->GetRotation().x;
-	// float yRotation = meshToRender->GetRotation().y;
-	// float zRotation = meshToRender->GetRotation().z;
-	// meshToRender->SetRotation(Vector3D(xRotation + .01, yRotation + .01, zRotation + .01));
 	
 	Matrix4x4 scaleMatrix = MatrixMath::MakeScaleMatrix(meshToRender->GetScale());
 	Matrix4x4 rotationMatrix_X = MatrixMath::MakeRotationMatrix_X(meshToRender->GetRotation().x);
@@ -134,19 +126,19 @@ void Renderer::Update()
 	Matrix4x4 rotationMatrix_Z = MatrixMath::MakeRotationMatrix_Z(meshToRender->GetRotation().z);
 	Matrix4x4 translationMatrix = MatrixMath::MakeTranslationMatrix(meshToRender->GetTranslation());
 
-	for (int i = 0; i < meshToRender->GetFaces().size() - 1; i++)
+	for (int i = 0; i < meshToRender->GetFaces().size(); i++)
 	{
-		Face currentFace = meshToRender->GetFaces()[i];
+		Face& currentFace = meshToRender->GetFaces()[i];
 
 		std::array<Vector3D, 3> faceVertices;
-		faceVertices[0] = meshToRender->GetVertices()[currentFace.GetIndices()[0] - 1];
-		faceVertices[1] = meshToRender->GetVertices()[currentFace.GetIndices()[1] - 1];
-		faceVertices[2] = meshToRender->GetVertices()[currentFace.GetIndices()[2] - 1];
+		faceVertices[0] = meshToRender->GetVertices()[currentFace.GetIndices()[0]];
+		faceVertices[1] = meshToRender->GetVertices()[currentFace.GetIndices()[1]];
+		faceVertices[2] = meshToRender->GetVertices()[currentFace.GetIndices()[2]];
 		//currentFace.SetColor();
 
 		/* Transform */
 		std::array<Vector4D, 3> transformedVertices;
-		for (int j = 0; j < transformedVertices.size() - 1; j++)
+		for (int j = 0; j < transformedVertices.size(); j++)
 		{
 			Vector4D transformedVertex = VectorMath::Vector3ToVector4(faceVertices[j]);
 
@@ -173,7 +165,7 @@ void Renderer::Update()
 		if (shouldProject)
 		{
 			std::array<Vector2D, 3> coordinatesToProject;
-			for (int j = 0; j < coordinatesToProject.size() - 1; j++)
+			for (int j = 0; j < coordinatesToProject.size(); j++)
 			{
 				// project current vertex
 				coordinatesToProject[j] = utility.Project(transformedVertices[j]);
@@ -199,9 +191,9 @@ void Renderer::Update()
 		}
 
 		/* Replace with a z buffer */
-		for (int i = 0; i < GetScene()->GetTrianglesToRender().size() - 1; i++)
+		for (int i = 0; i < GetScene()->GetTrianglesToRender().size(); i++)
 		{
-			for (int j = i; j < GetScene()->GetTrianglesToRender().size() - 1; j++)
+			for (int j = i; j < GetScene()->GetTrianglesToRender().size(); j++)
 			{
 				if (GetScene()->GetTrianglesToRender()[i].GetAvgVertexDepth() < GetScene()->GetTrianglesToRender()[j].GetAvgVertexDepth())
 				{
@@ -214,17 +206,17 @@ void Renderer::Update()
 
 void Renderer::Render()
 {
-	/* ======================= NEEDS TO BE ABSTRACTED FROM HERE ===============================*/
 	// Loop over projected triangle and render them
-	//int num_triangles = array_length(triangles_to_render);
-// 	for (int i = 0; i < num_triangles; i++)
-// 	{
-// 		triangle_t triangle = triangles_to_render[i];
-// 
+	for (int i = 0; i < GetScene()->GetTrianglesToRender().size(); i++)
+	{
+		Triangle triangle = GetScene()->GetTrianglesToRender()[i];
+		utility.DisplayFaces(triangle);
+		utility.DisplayVertices(triangle);
+		utility.DisplayWireFrame(triangle);
 // 		if (render_vertices) display_vertices(triangle);
 // 		if (render_faces) display_faces(triangle);
 // 		if (render_wireframe) display_wireframe(triangle);
-// 	}
+	}
 
 	// Clear array of triangles every frame
 	//array_free(triangles_to_render);
