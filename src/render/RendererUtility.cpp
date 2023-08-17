@@ -37,8 +37,8 @@ void RendererUtility::DrawFilledRectangle(int xPos, int yPos, int width, int hei
 		for (int j = 0; j < width; j++) // columns
 		{
 			/* Use the passed in position as an offset to draw rectangle. */
-			int x = xPos + i;
-			int y = yPos + j;
+			int x = xPos + j;
+			int y = yPos + i;
 			DrawPixel(x, y, color);
 		}
 	}
@@ -109,9 +109,9 @@ bool RendererUtility::ShouldCullFace(const std::array<Vector4D, 3>& transformedV
 
 	if (!camera) return false;
 
-	Vector3D vec_a = VectorMath::Vector4ToVetor3(transformedVertices[0]);
-	Vector3D vec_b = VectorMath::Vector4ToVetor3(transformedVertices[2]);
-	Vector3D vec_c = VectorMath::Vector4ToVetor3(transformedVertices[1]);
+	Vector3D vec_a = VectorMath::Vector4ToVector3(transformedVertices[0]);
+	Vector3D vec_b = VectorMath::Vector4ToVector3(transformedVertices[2]);
+	Vector3D vec_c = VectorMath::Vector4ToVector3(transformedVertices[1]);
 
 	Vector3D vec_ab = vec_b - vec_a;
 	Vector3D vec_ac = vec_c - vec_a;
@@ -131,20 +131,24 @@ bool RendererUtility::ShouldCullFace(const std::array<Vector4D, 3>& transformedV
 	return true;
 }
 
-Vector2D RendererUtility::Project(const Vector3D vec)
+Vector2D RendererUtility::Project(const Vector3D& vec)
 {
-	return Vector2D(vec.x, vec.y);
-}
+	Camera* camera = owner->GetScene()->GetViewportCamera();
 
-Vector2D RendererUtility::Project(const Vector4D vec)
-{
-	return Vector2D(vec.x, vec.y);
+	if (!camera) return Vector2D(0.f, 0.f);
+	
+	if (vec.z == 0)
+	{
+		return Vector2D(0.f, 0.f);
+	}
+
+	return Vector2D((camera->GetFov() * vec.x) / vec.z, (camera->GetFov() * vec.y) / vec.z);
 }
 
 void RendererUtility::DrawTriangleWireFrame(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color)
 {
 	DrawLine(vecA.x, vecA.y, vecB.x, vecB.y, color);
-	DrawLine(vecA.y, vecB.y, vecC.x, vecC.y, color);
+	DrawLine(vecB.x, vecB.y, vecC.x, vecC.y, color);
 	DrawLine(vecC.x, vecC.y, vecA.x, vecA.y, color);
 }
 

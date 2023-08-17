@@ -30,7 +30,7 @@ namespace VectorMath
 
 	void Normalize(Vector3D& v);
 
-	Vector3D Vector4ToVetor3(const Vector4D v);
+	Vector3D Vector4ToVector3(const Vector4D v);
 
 	Vector4D Vector3ToVector4(const Vector3D& v);
 

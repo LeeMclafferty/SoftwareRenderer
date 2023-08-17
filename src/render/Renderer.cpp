@@ -111,34 +111,34 @@ void Renderer::Update()
 
 	SDL_Delay(targetFrameTime);
 
-	// Reset to NULL on every update;
-	GetScene()->EmptyTrianlgesToRender();
 
 	/* I think later this can loop over all meshes in scene and render each. */
 	if (!meshToRender)
 	{
 		meshToRender = std::make_shared<Mesh>();
 	}
-	
+
+	meshToRender->SetRotation(Vector3D(meshToRender->GetRotation().x + .01, meshToRender->GetRotation().y + .01, meshToRender->GetRotation().z));
 	Matrix4x4 scaleMatrix = MatrixMath::MakeScaleMatrix(meshToRender->GetScale());
 	Matrix4x4 rotationMatrix_X = MatrixMath::MakeRotationMatrix_X(meshToRender->GetRotation().x);
 	Matrix4x4 rotationMatrix_Y = MatrixMath::MakeRotationMatrix_Y(meshToRender->GetRotation().y);
 	Matrix4x4 rotationMatrix_Z = MatrixMath::MakeRotationMatrix_Z(meshToRender->GetRotation().z);
 	Matrix4x4 translationMatrix = MatrixMath::MakeTranslationMatrix(meshToRender->GetTranslation());
 
-	for (int i = 0; i < meshToRender->GetFaces().size(); i++)
+	for (int i = 0; i <= meshToRender->GetFaces().size() - 1; i++)
 	{
-		Face& currentFace = meshToRender->GetFaces()[i];
+		Face currentFace = meshToRender->GetFaces()[i];
 
+		/* Subtract 1 to account for index in OBJ files*/
 		std::array<Vector3D, 3> faceVertices;
-		faceVertices[0] = meshToRender->GetVertices()[currentFace.GetIndices()[0]];
-		faceVertices[1] = meshToRender->GetVertices()[currentFace.GetIndices()[1]];
-		faceVertices[2] = meshToRender->GetVertices()[currentFace.GetIndices()[2]];
+		faceVertices[0] = meshToRender->GetVertices()[currentFace.GetIndices()[0] - 1];
+		faceVertices[1] = meshToRender->GetVertices()[currentFace.GetIndices()[1] - 1];
+		faceVertices[2] = meshToRender->GetVertices()[currentFace.GetIndices()[2] - 1];
 		//currentFace.SetColor();
 
 		/* Transform */
 		std::array<Vector4D, 3> transformedVertices;
-		for (int j = 0; j < transformedVertices.size(); j++)
+		for (int j = 0; j <= transformedVertices.size() - 1; j++)
 		{
 			Vector4D transformedVertex = VectorMath::Vector3ToVector4(faceVertices[j]);
 
@@ -149,26 +149,24 @@ void Renderer::Update()
 			transformedVertex = translationMatrix * transformedVertex;
 
 			// Translate vertex away from camera
-
-			transformedVertex.z += GetScene()->GetViewportCamera()->GetCameraLocation().z;
-			
+			transformedVertex.z += GetScene()->GetViewportCamera()->GetZoom();
 			transformedVertices[j] = transformedVertex;
 		}
 
 		bool shouldProject = true;
 		if (backFaceCullingEnabled)
 		{
-			shouldProject = utility.ShouldCullFace(transformedVertices);
+			shouldProject = !utility.ShouldCullFace(transformedVertices);
 		}
 
 		/* Project */
 		if (shouldProject)
 		{
 			std::array<Vector2D, 3> coordinatesToProject;
-			for (int j = 0; j < coordinatesToProject.size(); j++)
+			for (int j = 0; j <= coordinatesToProject.size() - 1; j++)
 			{
 				// project current vertex
-				coordinatesToProject[j] = utility.Project(transformedVertices[j]);
+				coordinatesToProject[j] = utility.Project(VectorMath::Vector4ToVector3(transformedVertices[j]));
 
 				/* Move to middle of screen */
 				coordinatesToProject[j].x += (GetWindowWidth() / 2);
@@ -187,18 +185,18 @@ void Renderer::Update()
 				currentFace.GetColor(),
 				faceDepth
 			);
-			GetScene()->AddTriangleToRender(triangleToProject);
+			GetScene()->AddTriangleToRender(std::move(triangleToProject));
 		}
 
-		/* Replace with a z buffer */
-		for (int i = 0; i < GetScene()->GetTrianglesToRender().size(); i++)
+	}
+	/* Simple depth sort - painter's algorithm - Replace with z buffer*/
+	for (int i = 0; i <= GetScene()->GetTrianglesToRender().size() - 1; i++)
+	{
+		for (int j = i + 1; j <= GetScene()->GetTrianglesToRender().size() - 1; j++)
 		{
-			for (int j = i; j < GetScene()->GetTrianglesToRender().size(); j++)
+			if (GetScene()->GetTrianglesToRender()[i].GetAvgVertexDepth() < GetScene()->GetTrianglesToRender()[j].GetAvgVertexDepth())
 			{
-				if (GetScene()->GetTrianglesToRender()[i].GetAvgVertexDepth() < GetScene()->GetTrianglesToRender()[j].GetAvgVertexDepth())
-				{
-					GetScene()->SwapTriangleRenderOrder(i, j);
-				}
+				GetScene()->SwapTriangleRenderOrder(i, j);
 			}
 		}
 	}
@@ -218,8 +216,7 @@ void Renderer::Render()
 // 		if (render_wireframe) display_wireframe(triangle);
 	}
 
-	// Clear array of triangles every frame
-	//array_free(triangles_to_render);
+	GetScene()->EmptyTrianlgesToRender();
 	RenderColorBuffer();
 	ClearColorBuffer(SLATE_GRAY);
 	SDL_RenderPresent(renderer);

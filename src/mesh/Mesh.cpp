@@ -7,7 +7,7 @@
 
 /* Default Constructor constructs cube mesh */
 Mesh::Mesh()
-	:rotation(Vector3D{0.f, 0.f, 0.f}), scale(Vector3D{1.f, 1.f, 1.f}), translation(Vector3D{1.f, 1.f, 1.f}), name("Default Cube")
+	:rotation(Vector3D{0.f, 0.f, 0.f}), scale(Vector3D{1.f, 1.f, 1.f}), translation(Vector3D{0.f, 0.f, 0.f}), name("Default Cube")
 {
 	vertices = {
 		{ -1, -1, -1 }, // 1

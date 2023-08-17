@@ -20,7 +20,7 @@ Engine::~Engine()
 void Engine::Run()
 {
 	bisRunning = window->InitializeWindow();
-	renderer->Setup();
+	SetupRenderer();
 
 	while (bisRunning)
 	{
@@ -48,7 +48,7 @@ void Engine::CheckDependencies()
 
 void Engine::SetupRenderer()
 {
-
+	renderer->Setup();
 }
 
 void Engine::SetupScene()

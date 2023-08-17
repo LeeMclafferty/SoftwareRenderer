@@ -9,9 +9,9 @@ Scene::Scene()
 	AddToCameras(&viewportCamera);
 }
 
-void Scene::AddTriangleToRender(Triangle tri)
+void Scene::AddTriangleToRender(Triangle&& tri)
 {
-	trianglesToRender.push_back(tri);
+	trianglesToRender.push_back(std::move(tri));
 }
 
 void Scene::EmptyTrianlgesToRender()

@@ -61,7 +61,7 @@ void VectorMath::Normalize(Vector2D& v)
 	v.y /= len;
 }
 
-Vector3D VectorMath::Vector4ToVetor3(const Vector4D v)
+Vector3D VectorMath::Vector4ToVector3(const Vector4D v)
 {
 	Vector3D result = { v.x, v.y, v.z };
 	return result;
@@ -78,10 +78,10 @@ float VectorMath::FindReciprocalSlope(const Vector2D& coordA, const Vector2D& co
 	float changeX = coordB.x - coordA.x;
 	float changeY = coordB.y - coordA.y;
 
-// 	if (changeY == 0.0f)
-// 	{
-// 		throw std::invalid_argument("Slope is undefined for vertical line.");
-// 	}
+	if (changeY == 0.0f)
+	{
+		return 0.f;
+	}
 	return changeX / changeY;
 }
 

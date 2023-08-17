@@ -6,8 +6,10 @@ class Camera
 {
 public:
 	Camera(int id);
-	const Vector3D GetCameraLocation() const { return cameraLocation; }
-	
+	Vector3D GetCameraLocation() const { return cameraLocation; }
+	float GetFov() const { return fov; }
+
+	float GetZoom() const { return zoom; }
 	void IncreaseZoom(float amount);
 	void DecreaseZoom(float amount);
 

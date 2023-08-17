@@ -23,8 +23,7 @@ public:
 	void DisplayVertices(const Triangle& triangle);
 	
 	bool ShouldCullFace(const std::array<Vector4D, 3>& transformedVertices);
-	Vector2D Project(const Vector3D vec);
-	Vector2D Project(const Vector4D vec);
+	Vector2D Project(const Vector3D& vec);
 
 	void DrawTriangleWireFrame(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color);
 	void DrawFilledTriangle(Triangle& triangle, uint32_t color);

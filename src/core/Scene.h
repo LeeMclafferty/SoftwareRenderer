@@ -14,7 +14,7 @@ public:
 	Scene();
 
 	const std::vector<Triangle> GetTrianglesToRender() const { return trianglesToRender; }
-	void AddTriangleToRender(Triangle tri);
+	void AddTriangleToRender(Triangle&& tri);
 	void EmptyTrianlgesToRender();
 	void SwapTriangleRenderOrder(int aIndex, int bIndex);
 

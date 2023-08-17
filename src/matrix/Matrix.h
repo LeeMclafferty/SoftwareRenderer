@@ -30,7 +30,7 @@ namespace MatrixMath
 		return mat;
 	}
 
-	Matrix4x4 MakeScaleMatrix(Vector3D scaleVec)
+	Matrix4x4 MakeScaleMatrix(const Vector3D& scaleVec)
 	{
 		Matrix4x4 matrix = GetIdentityMatrix();
 		matrix.matrix[0][0] = scaleVec.x;
@@ -39,7 +39,7 @@ namespace MatrixMath
 		return matrix;
 	}
 
-	Matrix4x4 MakeTranslationMatrix(Vector3D transVec)
+	Matrix4x4 MakeTranslationMatrix(const Vector3D& transVec)
 	{
 		Matrix4x4 matrix = GetIdentityMatrix();
 		matrix.matrix[0][3] = transVec.x;
@@ -68,7 +68,7 @@ namespace MatrixMath
 
 		Matrix4x4 matrix = GetIdentityMatrix();
 		matrix.matrix[1][1] = cosign;
-		matrix.matrix[1][1] = -sign;
+		matrix.matrix[1][2] = -sign;
 		matrix.matrix[2][1] = sign;
 		matrix.matrix[2][2] = cosign;
 		return matrix;
