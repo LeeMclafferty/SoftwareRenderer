@@ -96,9 +96,9 @@ void RendererUtility::DisplayFaces(Triangle& triangle)
 /* Draw Rectangle instead of pixel just so the vertices look bigger */
 void RendererUtility::DisplayVertices(const Triangle& triangle)
 {
-	DrawFilledRectangle(triangle.GetCoordinates()[0].x, triangle.GetCoordinates()[0].y, 3, 3, LIME_GREEN);
-	DrawFilledRectangle(triangle.GetCoordinates()[1].x, triangle.GetCoordinates()[1].y, 3, 3, LIME_GREEN);
-	DrawFilledRectangle(triangle.GetCoordinates()[2].x, triangle.GetCoordinates()[2].y, 3, 3, LIME_GREEN);
+	DrawFilledRectangle(triangle.GetCoordinates()[0].x, triangle.GetCoordinates()[0].y, 4, 4, LIME_GREEN);
+	DrawFilledRectangle(triangle.GetCoordinates()[1].x, triangle.GetCoordinates()[1].y, 4, 4, LIME_GREEN);
+	DrawFilledRectangle(triangle.GetCoordinates()[2].x, triangle.GetCoordinates()[2].y, 4, 4, LIME_GREEN);
 }
 
 bool RendererUtility::ShouldCullFace(const std::array<Vector4D, 3>& transformedVertices)
@@ -217,4 +217,72 @@ void RendererUtility::FillFlatBottomTriangle(const Vector2D& vecA, const Vector2
 		xStart += inverseSlopeLeft;
 		xEnd += inverseSlopeRight;
 	}
+}
+
+void RendererUtility::RenderByState(Triangle& triangle)
+{
+	if (ShouldRenderFaces())
+	{
+		DisplayFaces(triangle);
+	}
+	
+	if (ShouldRenderVertices())
+	{
+		DisplayVertices(triangle);
+	}
+	
+	if (ShouldRenderWireframe())
+	{
+		DisplayWireFrame(triangle);
+	}
+}
+
+bool RendererUtility::ShouldRenderFaces()
+{
+	if (!owner) return false;
+
+	std::vector<RenderState> compatibleStates {
+		RenderState::FacesOnly, RenderState::WireFrameFaces, RenderState::All
+	};
+
+	return CheckForMatchingState(owner, compatibleStates);
+}
+
+bool RendererUtility::ShouldRenderVertices()
+{
+	if (!owner) return false;
+
+	std::vector<RenderState> compatibleStates {
+		RenderState::VerticesOnly, RenderState::VerticesWireFrame, RenderState::All
+	};
+
+	return CheckForMatchingState(owner, compatibleStates);
+}
+
+bool RendererUtility::ShouldRenderWireframe()
+{
+	if (!owner) return false;
+
+	std::vector<RenderState> compatibleStates {
+		RenderState::WireFrame, RenderState::WireFrameFaces, RenderState::VerticesWireFrame, RenderState::All
+	};
+
+	return CheckForMatchingState(owner, compatibleStates);
+}
+
+bool RendererUtility::CheckForMatchingState(const Renderer* renderer, const std::vector<RenderState>& statesToCheck)
+{
+	if (!renderer) return false;
+
+	RenderState state = owner->GetRenderState();
+
+	for (auto compState : statesToCheck)
+	{
+		if (compState == state)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }

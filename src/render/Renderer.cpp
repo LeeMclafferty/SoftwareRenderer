@@ -208,12 +208,7 @@ void Renderer::Render()
 	for (int i = 0; i < GetScene()->GetTrianglesToRender().size(); i++)
 	{
 		Triangle triangle = GetScene()->GetTrianglesToRender()[i];
-		utility.DisplayFaces(triangle);
-		utility.DisplayVertices(triangle);
-		utility.DisplayWireFrame(triangle);
-// 		if (render_vertices) display_vertices(triangle);
-// 		if (render_faces) display_faces(triangle);
-// 		if (render_wireframe) display_wireframe(triangle);
+		utility.RenderByState(triangle);
 	}
 
 	GetScene()->EmptyTrianlgesToRender();

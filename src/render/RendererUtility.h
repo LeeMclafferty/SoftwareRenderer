@@ -1,8 +1,10 @@
 #pragma once
 #include <iostream>
+#include <vector>
 #include "SDL.h"
 #include "vectors/VectorTypes.h"
 #include "primatives/Triangle.h"
+#include "RendererStateManager.h"
 
 class Renderer;
 
@@ -29,8 +31,15 @@ public:
 	void DrawFilledTriangle(Triangle& triangle, uint32_t color);
 	void FillFlatTopTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color);
 	void FillFlatBottomTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color);
+
+	void RenderByState(Triangle& triangle);
 private:
 	Renderer* owner;
+
+	bool ShouldRenderFaces();
+	bool ShouldRenderVertices();
+	bool ShouldRenderWireframe();
+	bool CheckForMatchingState(const Renderer* renderer, const std::vector<RenderState>& statesToCheck);
 
 
 };
