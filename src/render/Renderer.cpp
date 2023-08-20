@@ -115,7 +115,9 @@ void Renderer::Update()
 	/* I think later this can loop over all meshes in scene and render each. */
 	if (!meshToRender)
 	{
-		meshToRender = std::make_shared<Mesh>();
+		std::string fileName = ".\\assets\\dino.obj";
+		std::string meshName = "Teapot";
+		meshToRender = std::make_shared<Mesh>(fileName, meshName);
 	}
 
 	meshToRender->SetRotation(Vector3D(meshToRender->GetRotation().x + .01, meshToRender->GetRotation().y + .01, meshToRender->GetRotation().z));
@@ -134,7 +136,7 @@ void Renderer::Update()
 		faceVertices[0] = meshToRender->GetVertices()[currentFace.GetIndices()[0] - 1];
 		faceVertices[1] = meshToRender->GetVertices()[currentFace.GetIndices()[1] - 1];
 		faceVertices[2] = meshToRender->GetVertices()[currentFace.GetIndices()[2] - 1];
-		//currentFace.SetColor();
+		currentFace.SetColor(WHITE);
 
 		/* Transform */
 		std::array<Vector4D, 3> transformedVertices;
@@ -189,6 +191,8 @@ void Renderer::Update()
 		}
 
 	}
+
+	std::cout << GetScene()->GetTrianglesToRender().size() << std::endl;
 	/* Simple depth sort - painter's algorithm - Replace with z buffer*/
 	for (int i = 0; i <= GetScene()->GetTrianglesToRender().size() - 1; i++)
 	{
@@ -222,6 +226,4 @@ void Renderer::Setup()
 	colorBuffer.resize(GetWindowHeight() * GetWindowWidth());
 	CreateRenderer();
 	colorBufferTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, GetWindowWidth(), GetWindowHeight());
-	//load_cube_mesh_data();
-	//load_obj_file_data("./assets/cube.obj");
 }

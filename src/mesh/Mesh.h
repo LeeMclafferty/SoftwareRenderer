@@ -9,7 +9,7 @@ class Mesh
 {
 public:
 	Mesh();
-	Mesh(char* file, std::string meshName);
+	Mesh(std::string file, std::string meshName);
 
 	std::vector<Vector3D> GetVertices() const { return vertices; }
 	std::vector<Face> GetFaces() const { return faces; }
@@ -24,6 +24,7 @@ public:
 	
 	std::string GetName() const { return name; }
 	void SetMeshName(std::string newName) { name = newName; }
+
 private:
 	std::vector<Vector3D> vertices;
 	std::vector<Face> faces;
@@ -32,6 +33,6 @@ private:
 	Vector3D translation;
 	std::string name;
 
-	void LoadObjData(char* filename);
+	void LoadObjData(const std::string& filename);
 };
 

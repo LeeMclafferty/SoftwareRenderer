@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <array>
 #include <colors/Colors.h>
 
 /* Default Constructor constructs cube mesh */
@@ -42,51 +43,63 @@ Mesh::Mesh()
 	};
 }
 
-Mesh::Mesh(char* file, std::string meshName)
+Mesh::Mesh(std::string file, std::string meshName)
 	:name(meshName)
 {
 	LoadObjData(file);
 }
 
-void Mesh::LoadObjData(char* filename)
+void Mesh::LoadObjData(const std::string& fileName)
 {
-	std::ifstream file(filename);
-	std::string line;
+	FILE* file;
+	fopen_s(&file, fileName.c_str(), "r");
+	char line[1024];
 
-	while (std::getline(file, line))
+	while (fgets(line, 1024, file)) 
 	{
-		std::istringstream iss(line);
-		std::string prefix;
-		iss >> prefix;
-
-		if (prefix == "v")
+		// Vertex information
+		if (strncmp(line, "v ", 2) == 0) 
 		{
-			Vector3D vertex{0, 0, 0};
-			iss >> vertex.x >> vertex.y >> vertex.z;
+			Vector3D vertex;
+			sscanf_s(line, "v %f %f %f", &vertex.x, &vertex.y, &vertex.z);
 			vertices.push_back(vertex);
 		}
-		else if (prefix == "f")
+		// Face information
+		if (strncmp(line, "f ", 2) == 0)
 		{
-			int vertex[3];
-			int texture_coord[3];
-			int normals[3];
+			int vertexIndices[3];
+			int textureIndices[3];
+			int normalIndices[3];
 
-			char slash; // For reading slashes
+			// Initialize arrays to avoid undefined behavior
+			memset(vertexIndices, 0, sizeof(vertexIndices));
+			memset(textureIndices, 0, sizeof(textureIndices));
+			memset(normalIndices, 0, sizeof(normalIndices));
 
-			for (int i = 0; i < 3; ++i)
+			int matched = sscanf_s(
+				line, "f %d/%d/%d %d/%d/%d %d/%d/%d",
+				&vertexIndices[0], &textureIndices[0], &normalIndices[0],
+				&vertexIndices[1], &textureIndices[1], &normalIndices[1],
+				&vertexIndices[2], &textureIndices[2], &normalIndices[2]
+			);
+
+			if (matched != 9) // If the expected format doesn't match, try other formats.
 			{
-				iss >> vertex[i] >> slash >> texture_coord[i] >> slash >> normals[i];
+				matched = sscanf_s(
+					line, "f %d/%d %d/%d %d/%d",
+					&vertexIndices[0], &textureIndices[0],
+					&vertexIndices[1], &textureIndices[1],
+					&vertexIndices[2], &textureIndices[2]
+				);
 			}
 
-			Face face (
-				std::array<int, 3> {
-					vertex[0],
-					vertex[1],
-					vertex[2],
-				},
-				WHITE
-			);
+			std::array<int, 3> indices;
+			indices[0] = vertexIndices[0];
+			indices[1] = vertexIndices[1];
+			indices[2] = vertexIndices[2];
+			Face face(indices, WHITE);
 			faces.push_back(face);
 		}
 	}
 }
+
