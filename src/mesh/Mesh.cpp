@@ -44,7 +44,7 @@ Mesh::Mesh()
 }
 
 Mesh::Mesh(std::string file, std::string meshName)
-	:name(meshName)
+	:rotation(Vector3D{ 0.f, 0.f, 0.f }), scale(Vector3D{ 1.f, 1.f, 1.f }), translation(Vector3D{ 0.f, 0.f, 0.f }), name(meshName)
 {
 	LoadObjData(file);
 }

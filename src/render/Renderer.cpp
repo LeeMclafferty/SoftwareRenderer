@@ -115,12 +115,13 @@ void Renderer::Update()
 	/* I think later this can loop over all meshes in scene and render each. */
 	if (!meshToRender)
 	{
-		std::string fileName = ".\\assets\\dino.obj";
-		std::string meshName = "Teapot";
+		std::string fileName = ".\\assets\\f22.obj";
+		std::string meshName = "Plane";
 		meshToRender = std::make_shared<Mesh>(fileName, meshName);
+/*		meshToRender = std::make_shared<Mesh>();*/
 	}
 
-	meshToRender->SetRotation(Vector3D(meshToRender->GetRotation().x + .01, meshToRender->GetRotation().y + .01, meshToRender->GetRotation().z));
+	meshToRender->SetRotation(Vector3D(meshToRender->GetRotation().x + .05, meshToRender->GetRotation().y, meshToRender->GetRotation().z));
 	Matrix4x4 scaleMatrix = MatrixMath::MakeScaleMatrix(meshToRender->GetScale());
 	Matrix4x4 rotationMatrix_X = MatrixMath::MakeRotationMatrix_X(meshToRender->GetRotation().x);
 	Matrix4x4 rotationMatrix_Y = MatrixMath::MakeRotationMatrix_Y(meshToRender->GetRotation().y);
