@@ -15,6 +15,24 @@ struct Matrix4x4
 		result.w = matrix[3][0] * vec.x + matrix[3][1] * vec.y + matrix[3][2] * vec.z + matrix[3][3] * vec.w;
 		return result;
 	}
+
+	Matrix4x4 operator*(const Matrix4x4& mat)
+	{
+		Matrix4x4 result;
+
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				result.matrix[i][j] = (matrix[i][0] * mat.matrix[0][j]) + 
+					(matrix[i][1] * mat.matrix[1][j]) + 
+					(matrix[i][2] * mat.matrix[2][j]) + 
+					(matrix[i][3] * mat.matrix[3][j]);
+			}
+		}
+
+		return result;
+	}
 };
 
 namespace MatrixMath

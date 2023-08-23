@@ -115,18 +115,27 @@ void Renderer::Update()
 	/* I think later this can loop over all meshes in scene and render each. */
 	if (!meshToRender)
 	{
-		std::string fileName = ".\\assets\\f22.obj";
-		std::string meshName = "Plane";
-		meshToRender = std::make_shared<Mesh>(fileName, meshName);
-/*		meshToRender = std::make_shared<Mesh>();*/
+// 		std::string fileName = ".\\assets\\f22.obj";
+// 		std::string meshName = "Plane";
+// 		meshToRender = std::make_shared<Mesh>(fileName, meshName);
+		meshToRender = std::make_shared<Mesh>();
 	}
 
-	meshToRender->SetRotation(Vector3D(meshToRender->GetRotation().x + .05, meshToRender->GetRotation().y, meshToRender->GetRotation().z));
+	meshToRender->SetRotation(Vector3D(meshToRender->GetRotation().x + .05, 
+		meshToRender->GetRotation().y + .05, meshToRender->GetRotation().z + .05
+	));
+// 	meshToRender->SetScale(Vector3D(meshToRender->GetScale().x + .005, 
+// 		meshToRender->GetScale().y + .005, meshToRender->GetScale().z + .005
+// 	));
+// 	meshToRender->SetLocation(Vector3D( meshToRender->GetLocation().x + .02,
+// 		meshToRender->GetLocation().y + .02, meshToRender->GetLocation().z + .02
+// 	));
+
 	Matrix4x4 scaleMatrix = MatrixMath::MakeScaleMatrix(meshToRender->GetScale());
 	Matrix4x4 rotationMatrix_X = MatrixMath::MakeRotationMatrix_X(meshToRender->GetRotation().x);
 	Matrix4x4 rotationMatrix_Y = MatrixMath::MakeRotationMatrix_Y(meshToRender->GetRotation().y);
 	Matrix4x4 rotationMatrix_Z = MatrixMath::MakeRotationMatrix_Z(meshToRender->GetRotation().z);
-	Matrix4x4 translationMatrix = MatrixMath::MakeTranslationMatrix(meshToRender->GetTranslation());
+	Matrix4x4 translationMatrix = MatrixMath::MakeTranslationMatrix(meshToRender->GetLocation());
 
 	for (int i = 0; i <= meshToRender->GetFaces().size() - 1; i++)
 	{
@@ -137,7 +146,7 @@ void Renderer::Update()
 		faceVertices[0] = meshToRender->GetVertices()[currentFace.GetIndices()[0] - 1];
 		faceVertices[1] = meshToRender->GetVertices()[currentFace.GetIndices()[1] - 1];
 		faceVertices[2] = meshToRender->GetVertices()[currentFace.GetIndices()[2] - 1];
-		currentFace.SetColor(WHITE);
+		//currentFace.SetColor(WHITE);
 
 		/* Transform */
 		std::array<Vector4D, 3> transformedVertices;
@@ -145,11 +154,14 @@ void Renderer::Update()
 		{
 			Vector4D transformedVertex = VectorMath::Vector3ToVector4(faceVertices[j]);
 
-			transformedVertex = scaleMatrix * transformedVertex;
-			transformedVertex = rotationMatrix_X * transformedVertex;
-			transformedVertex = rotationMatrix_Y * transformedVertex;
-			transformedVertex = rotationMatrix_Z * transformedVertex;
-			transformedVertex = translationMatrix * transformedVertex;
+			Matrix4x4 sceneMatrix = MatrixMath::GetIdentityMatrix();
+			sceneMatrix = (scaleMatrix * sceneMatrix);
+			sceneMatrix = (rotationMatrix_X* sceneMatrix);
+			sceneMatrix = (rotationMatrix_Y * sceneMatrix);
+			sceneMatrix = (rotationMatrix_Z * sceneMatrix);
+			sceneMatrix = (translationMatrix * sceneMatrix);
+
+			transformedVertex = sceneMatrix * transformedVertex;
 
 			// Translate vertex away from camera
 			transformedVertex.z += GetScene()->GetViewportCamera()->GetZoom();

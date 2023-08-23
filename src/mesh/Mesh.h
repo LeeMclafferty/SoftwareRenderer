@@ -16,11 +16,11 @@ public:
 
 	Vector3D GetRotation() const { return rotation; }
 	Vector3D GetScale() const { return scale; }
-	Vector3D GetTranslation() const { return translation; }
+	Vector3D GetLocation() const { return translation; }
 
 	void SetRotation(Vector3D rot) { rotation = rot; }
 	void SetScale(Vector3D newScale) { scale = newScale; }
-	void SetTranslation(Vector3D trans) { translation = trans; }
+	void SetLocation(Vector3D trans) { translation = trans; }
 	
 	std::string GetName() const { return name; }
 	void SetMeshName(std::string newName) { name = newName; }
