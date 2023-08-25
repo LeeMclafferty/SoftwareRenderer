@@ -1,10 +1,16 @@
 #include "Scene.h"
 #include "camera/Camera.h"
 #include "mesh/Mesh.h"
+#include "core/Window.h"
 
-Scene::Scene()
-	:viewportCamera(1), testingMesh()
+
+Scene::Scene(Window* win)
+	:viewportCamera(1, (float)win->GetHeight() / (float)win->GetWidth()), testingMesh(), window(win)
 {
+	if (!win)
+	{
+		throw std::invalid_argument("Window is required to construct Scene Object");
+	}
 	AddToMeshes(&testingMesh);
 	AddToCameras(&viewportCamera);
 }

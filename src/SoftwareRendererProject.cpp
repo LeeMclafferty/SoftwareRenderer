@@ -9,7 +9,7 @@ int main(int argc, char* args[])
 {
     Window window;
     Renderer renderer;
-    Scene scene;
+    Scene scene(&window);
     Engine engine(&renderer, &scene, &window);
     renderer.SetEngine(&engine);
 

@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\matrix\Matrix.cpp" />
     <ClCompile Include="src\render\RendererStateManager.cpp" />
     <ClCompile Include="src\core\Scene.cpp" />
     <ClCompile Include="src\mesh\Face.cpp" />

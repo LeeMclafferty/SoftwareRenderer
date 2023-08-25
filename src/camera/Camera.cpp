@@ -1,7 +1,8 @@
 #include "Camera.h"
 
-Camera::Camera(int id)
-	:cameraLocation(Vector3D{0.f, 0.f, 0.f}), fov(640), zoom(5.f), cameraId(id)
+Camera::Camera(int id, float as)
+	:cameraLocation(Vector3D{0.f, 0.f, 0.f}), zoom(5.f), cameraId(id), fov(180/3), nearPlane(.1f), 
+	farPlane(100.f), aspectRatio(as)
 {
 
 }

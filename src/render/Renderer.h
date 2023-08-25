@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "RendererUtility.h"
 #include "RendererStateManager.h"
+#include "matrix/Matrix.h"
 
 class Scene;
 class Mesh;
@@ -51,5 +52,7 @@ private:
 
 	class Engine* engine;
 	std::shared_ptr<Mesh> meshToRender;
+
+	Matrix4x4 projectionMatrix;
 };
 

@@ -11,7 +11,7 @@ class Mesh;
 class Scene
 {
 public:
-	Scene();
+	Scene(class Window* win);
 
 	const std::vector<Triangle> GetTrianglesToRender() const { return trianglesToRender; }
 	void AddTriangleToRender(Triangle&& tri);
@@ -27,6 +27,8 @@ public:
 	Mesh* GetMesh(const std::string& meshKey) const;
 	void AddToMeshes(Mesh* mesh);
 
+	class Window* GetWindow() { window; }
+
 private:
 	std::vector<Triangle> trianglesToRender;
 	std::unordered_map<int, Camera*> cameraInScene;
@@ -34,5 +36,7 @@ private:
 	
 	Camera viewportCamera;
 	Mesh testingMesh;
+
+	class Window* window;
 };
 

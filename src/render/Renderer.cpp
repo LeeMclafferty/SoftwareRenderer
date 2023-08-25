@@ -6,13 +6,13 @@
 #include "core/Window.h"
 #include "colors/Colors.h"
 #include "mesh/Mesh.h"
-#include "matrix/Matrix.h"
 #include "vectors/VectorMath.h"
 
 Renderer::Renderer()
 	:renderer(nullptr), fps(30), targetFrameTime(1000 / fps), colorBufferTexture(nullptr), utility(this),
 	engine(nullptr)
 {
+
 }
 
 Renderer::~Renderer()
@@ -177,15 +177,19 @@ void Renderer::Update()
 		/* Project */
 		if (shouldProject)
 		{
-			std::array<Vector2D, 3> coordinatesToProject;
+			std::array<Vector4D, 3> coordinatesToProject;
 			for (int j = 0; j <= coordinatesToProject.size() - 1; j++)
 			{
 				// project current vertex
-				coordinatesToProject[j] = utility.Project(VectorMath::Vector4ToVector3(transformedVertices[j]));
+				coordinatesToProject[j] = MatrixMath::PerspectiveDivide(projectionMatrix, transformedVertices[j]);
 
 				/* Move to middle of screen */
-				coordinatesToProject[j].x += (GetWindowWidth() / 2);
-				coordinatesToProject[j].y += (GetWindowHeight() / 2);
+// 				coordinatesToProject[j].x *= (GetWindowHeight() / 2.f);
+// 				coordinatesToProject[j].y += (GetWindowWidth() / 2.f);
+				
+				coordinatesToProject[j].x += (GetWindowWidth() / 2.f);
+				coordinatesToProject[j].y += (GetWindowHeight() / 2.f);
+				
 			}
 
 			/* Replace with a z buffer */
@@ -193,9 +197,9 @@ void Renderer::Update()
 
 			Triangle triangleToProject (
 				std::array<Vector2D, 3> {
-					Vector2D(coordinatesToProject[0]), 
-					Vector2D(coordinatesToProject[1]), 
-					Vector2D(coordinatesToProject[2])
+					Vector2D(coordinatesToProject[0].x, coordinatesToProject[0].y),
+					Vector2D(coordinatesToProject[1].x, coordinatesToProject[1].y),
+					Vector2D(coordinatesToProject[2].x, coordinatesToProject[2].y)
 				},
 				currentFace.GetColor(),
 				faceDepth
@@ -239,4 +243,10 @@ void Renderer::Setup()
 	colorBuffer.resize(GetWindowHeight() * GetWindowWidth());
 	CreateRenderer();
 	colorBufferTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, GetWindowWidth(), GetWindowHeight());
+
+	if (GetScene())
+	{
+		const Camera* cam = GetScene()->GetViewportCamera();
+		projectionMatrix = MatrixMath::MakePerspectiveMatrix(cam->GetFov(), cam->GetAspectRation(), cam->GetNearPlane(), cam->GetFarPlane());
+	}
 }
