@@ -6,6 +6,16 @@ struct Matrix4x4
 {
 	std::array<std::array<float, 4>, 4> matrix;
 
+	Matrix4x4()
+	{
+		matrix = {{
+			{0, 0, 0, 0},
+			{0, 0, 0, 0},
+			{0, 0, 0, 0},
+			{0, 0, 0, 0}
+		} };
+	}
+
 	Vector4D operator*(const Vector4D& vec)
 	{
 		Vector4D result;
@@ -45,4 +55,5 @@ namespace MatrixMath
 	Matrix4x4 MakeRotationMatrix_Y(float angle);
 	Matrix4x4 MakePerspectiveMatrix(float fov, float aspectRation, float zNear, float zFar);
 	Vector4D PerspectiveDivide(Matrix4x4 project, Vector4D vec);
+	Matrix4x4 ZeroMatrix();
 }

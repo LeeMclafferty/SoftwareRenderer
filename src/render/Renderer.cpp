@@ -121,8 +121,8 @@ void Renderer::Update()
 		meshToRender = std::make_shared<Mesh>();
 	}
 
-	meshToRender->SetRotation(Vector3D(meshToRender->GetRotation().x + .05, 
-		meshToRender->GetRotation().y + .05, meshToRender->GetRotation().z + .05
+	meshToRender->SetRotation(Vector3D(meshToRender->GetRotation().x + .01, 
+		meshToRender->GetRotation().y + .01, meshToRender->GetRotation().z + .01
 	));
 // 	meshToRender->SetScale(Vector3D(meshToRender->GetScale().x + .005, 
 // 		meshToRender->GetScale().y + .005, meshToRender->GetScale().z + .005
@@ -183,13 +183,12 @@ void Renderer::Update()
 				// project current vertex
 				coordinatesToProject[j] = MatrixMath::PerspectiveDivide(projectionMatrix, transformedVertices[j]);
 
-				/* Move to middle of screen */
-// 				coordinatesToProject[j].x *= (GetWindowHeight() / 2.f);
-// 				coordinatesToProject[j].y += (GetWindowWidth() / 2.f);
-				
+				/* Scale and Move to middle of screen */
+				coordinatesToProject[j].x = (coordinatesToProject[j].x) * 0.5 * GetWindowWidth();
+				coordinatesToProject[j].y = (coordinatesToProject[j].y) * 0.5 * GetWindowHeight();
+
 				coordinatesToProject[j].x += (GetWindowWidth() / 2.f);
 				coordinatesToProject[j].y += (GetWindowHeight() / 2.f);
-				
 			}
 
 			/* Replace with a z buffer */
@@ -209,7 +208,7 @@ void Renderer::Update()
 
 	}
 
-	std::cout << GetScene()->GetTrianglesToRender().size() << std::endl;
+	std::cout << "Tri's to render: " << GetScene()->GetTrianglesToRender().size() << std::endl;
 	/* Simple depth sort - painter's algorithm - Replace with z buffer*/
 	for (int i = 0; i <= GetScene()->GetTrianglesToRender().size() - 1; i++)
 	{

@@ -1,15 +1,18 @@
 #include "Matrix.h"
+#include <math.h>
+#include <SDL_stdinc.h>
 
 namespace MatrixMath
 {
 	Matrix4x4 GetIdentityMatrix()
 	{
-		Matrix4x4 mat = { {{
+		Matrix4x4 mat;
+		mat.matrix = { {
 			{1, 0, 0, 0},
 			{0, 1, 0, 0},
 			{0, 0, 1, 0},
 			{0, 0, 0, 1}
-		}} };
+		} };
 		return mat;
 	}
 
@@ -70,14 +73,15 @@ namespace MatrixMath
 		return matrix;
 	}
 
-	Matrix4x4 MakePerspectiveMatrix(float fov, float aspectRation, float zNear, float zFar)
+	Matrix4x4 MakePerspectiveMatrix(float fov, float aspectRatio, float zNear, float zFar)
 	{
+		float radiansFOV = fov * (M_PI / 180.0);
 		Matrix4x4 mat;
-		mat.matrix[0][0] = aspectRation * (1 / tan(fov / 2));
-		mat.matrix[1][1] = 1 / tan(fov / 2);
+		mat.matrix[0][0] = aspectRatio * (1 / tan(radiansFOV / 2));
+		mat.matrix[1][1] = 1 / tan(radiansFOV / 2);
 		mat.matrix[2][2] = zFar / (zFar - zNear);
 		mat.matrix[2][3] = (-zFar * zNear) / (zFar - zNear);
-		mat.matrix[3][2] = 1.f;
+		mat.matrix[3][2] = -1.f;
 		return mat;
 	}
 
@@ -92,5 +96,11 @@ namespace MatrixMath
 			result.z /= result.w;
 		}
 		return result;
+	}
+
+	Matrix4x4 ZeroMatrix()
+	{
+		Matrix4x4 mat; // Initialized to a zero matrix, so just return it.  
+		return mat;
 	}
 }
