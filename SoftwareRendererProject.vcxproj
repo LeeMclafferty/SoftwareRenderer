@@ -155,6 +155,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\lighting\DirectionalLight.cpp" />
+    <ClCompile Include="src\lighting\LightSource.cpp" />
     <ClCompile Include="src\matrix\Matrix.cpp" />
     <ClCompile Include="src\render\RendererStateManager.cpp" />
     <ClCompile Include="src\core\Scene.cpp" />
@@ -171,6 +173,8 @@
     <ClCompile Include="src\vectors\VectorMath.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\lighting\DirectionalLight.h" />
+    <ClInclude Include="src\lighting\LightSource.h" />
     <ClInclude Include="src\render\RendererStateManager.h" />
     <ClInclude Include="src\core\Scene.h" />
     <ClInclude Include="src\matrix\Matrix.h" />

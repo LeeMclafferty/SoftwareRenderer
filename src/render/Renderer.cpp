@@ -208,7 +208,6 @@ void Renderer::Update()
 
 	}
 
-	std::cout << "Tri's to render: " << GetScene()->GetTrianglesToRender().size() << std::endl;
 	/* Simple depth sort - painter's algorithm - Replace with z buffer*/
 	for (int i = 0; i <= GetScene()->GetTrianglesToRender().size() - 1; i++)
 	{
