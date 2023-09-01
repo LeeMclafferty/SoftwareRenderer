@@ -5,7 +5,7 @@
 
 
 Scene::Scene(Window* win)
-	:viewportCamera(1, (float)win->GetHeight() / (float)win->GetWidth()), testingMesh(), window(win)
+	:viewportCamera(1, (float)win->GetHeight() / (float)win->GetWidth()), testingMesh(), window(win), sun()
 {
 	if (!win)
 	{

@@ -5,6 +5,7 @@
 #include "camera/Camera.h"
 #include "primatives/Triangle.h"
 #include "mesh/Mesh.h"
+#include "lighting/DirectionalLight.h"
 
 class Mesh;
 
@@ -29,6 +30,8 @@ public:
 
 	class Window* GetWindow() { window; }
 
+	DirectionalLight* GetSun() { return &sun; }
+
 private:
 	std::vector<Triangle> trianglesToRender;
 	std::unordered_map<int, Camera*> cameraInScene;
@@ -38,5 +41,7 @@ private:
 	Mesh testingMesh;
 
 	class Window* window;
+
+	DirectionalLight sun;
 };
 

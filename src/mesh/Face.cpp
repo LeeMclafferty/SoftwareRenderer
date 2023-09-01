@@ -1,5 +1,6 @@
 #include "Face.h"
 #include "colors/Colors.h"
+#include "lighting/LightSource.h"
 
 Face::Face()
 	:indices{ 0, 0, 0 }, color(WHITE)

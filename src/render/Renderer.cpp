@@ -124,12 +124,6 @@ void Renderer::Update()
 	meshToRender->SetRotation(Vector3D(meshToRender->GetRotation().x + .01, 
 		meshToRender->GetRotation().y + .01, meshToRender->GetRotation().z + .01
 	));
-// 	meshToRender->SetScale(Vector3D(meshToRender->GetScale().x + .005, 
-// 		meshToRender->GetScale().y + .005, meshToRender->GetScale().z + .005
-// 	));
-// 	meshToRender->SetLocation(Vector3D( meshToRender->GetLocation().x + .02,
-// 		meshToRender->GetLocation().y + .02, meshToRender->GetLocation().z + .02
-// 	));
 
 	Matrix4x4 scaleMatrix = MatrixMath::MakeScaleMatrix(meshToRender->GetScale());
 	Matrix4x4 rotationMatrix_X = MatrixMath::MakeRotationMatrix_X(meshToRender->GetRotation().x);
@@ -191,6 +185,9 @@ void Renderer::Update()
 				coordinatesToProject[j].y += (GetWindowHeight() / 2.f);
 			}
 
+			
+			uint32_t color = GetScene()->GetSun()->ApplyLightingIntensity(currentFace.GetColor(), .6);
+
 			/* Replace with a z buffer */
 			float faceDepth = (transformedVertices[0].z + transformedVertices[1].z + transformedVertices[2].z) / 3.0;
 
@@ -200,7 +197,7 @@ void Renderer::Update()
 					Vector2D(coordinatesToProject[1].x, coordinatesToProject[1].y),
 					Vector2D(coordinatesToProject[2].x, coordinatesToProject[2].y)
 				},
-				currentFace.GetColor(),
+				color,
 				faceDepth
 			);
 			GetScene()->AddTriangleToRender(std::move(triangleToProject));
