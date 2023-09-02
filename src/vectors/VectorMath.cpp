@@ -1,4 +1,5 @@
 #include "vectors/VectorMath.h"
+#include <array>
 
 
 Vector3D VectorMath::PitchRotation(const Vector3D& v, float angle)
@@ -83,6 +84,23 @@ float VectorMath::FindReciprocalSlope(const Vector2D& coordA, const Vector2D& co
 		return 0.f;
 	}
 	return changeX / changeY;
+}
+
+Vector3D VectorMath::GetNormal(const std::array<Vector4D, 3>& transformedVertices)
+{
+	Vector3D vec_a = VectorMath::Vector4ToVector3(transformedVertices[0]);
+	Vector3D vec_b = VectorMath::Vector4ToVector3(transformedVertices[2]);
+	Vector3D vec_c = VectorMath::Vector4ToVector3(transformedVertices[1]);
+
+	Vector3D vec_ab = vec_b - vec_a;
+	Vector3D vec_ac = vec_c - vec_a;
+	VectorMath::Normalize(vec_ab);
+	VectorMath::Normalize(vec_ac);
+
+	Vector3D normal = VectorMath::CrossProduct(vec_ab, vec_ac);
+	VectorMath::Normalize(normal);
+
+	return normal;
 }
 
 void VectorMath::Normalize(Vector3D& v)

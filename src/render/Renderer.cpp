@@ -115,10 +115,10 @@ void Renderer::Update()
 	/* I think later this can loop over all meshes in scene and render each. */
 	if (!meshToRender)
 	{
-// 		std::string fileName = ".\\assets\\f22.obj";
-// 		std::string meshName = "Plane";
-// 		meshToRender = std::make_shared<Mesh>(fileName, meshName);
-		meshToRender = std::make_shared<Mesh>();
+		std::string fileName = ".\\assets\\f22.obj";
+		std::string meshName = "Plane";
+		meshToRender = std::make_shared<Mesh>(fileName, meshName);
+		//meshToRender = std::make_shared<Mesh>();
 	}
 
 	meshToRender->SetRotation(Vector3D(meshToRender->GetRotation().x + .01, 
@@ -140,7 +140,7 @@ void Renderer::Update()
 		faceVertices[0] = meshToRender->GetVertices()[currentFace.GetIndices()[0] - 1];
 		faceVertices[1] = meshToRender->GetVertices()[currentFace.GetIndices()[1] - 1];
 		faceVertices[2] = meshToRender->GetVertices()[currentFace.GetIndices()[2] - 1];
-		//currentFace.SetColor(WHITE);
+		currentFace.SetColor(RED);
 
 		/* Transform */
 		std::array<Vector4D, 3> transformedVertices;
@@ -185,8 +185,7 @@ void Renderer::Update()
 				coordinatesToProject[j].y += (GetWindowHeight() / 2.f);
 			}
 
-			
-			uint32_t color = GetScene()->GetSun()->ApplyLightingIntensity(currentFace.GetColor(), .6);
+			uint32_t color = GetScene()->GetSun()->ApplyLightingIntensity(currentFace.GetColor(), VectorMath::DotProduct(VectorMath::GetNormal(transformedVertices), GetScene()->GetSun()->GetDirection()));
 
 			/* Replace with a z buffer */
 			float faceDepth = (transformedVertices[0].z + transformedVertices[1].z + transformedVertices[2].z) / 3.0;

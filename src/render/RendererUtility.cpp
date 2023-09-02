@@ -110,16 +110,7 @@ bool RendererUtility::ShouldCullFace(const std::array<Vector4D, 3>& transformedV
 	if (!camera) return false;
 
 	Vector3D vec_a = VectorMath::Vector4ToVector3(transformedVertices[0]);
-	Vector3D vec_b = VectorMath::Vector4ToVector3(transformedVertices[2]);
-	Vector3D vec_c = VectorMath::Vector4ToVector3(transformedVertices[1]);
-
-	Vector3D vec_ab = vec_b - vec_a;
-	Vector3D vec_ac = vec_c - vec_a;
-	VectorMath::Normalize(vec_ab);
-	VectorMath::Normalize(vec_ac);
-
-	Vector3D normal = VectorMath::CrossProduct(vec_ab, vec_ac);
-	VectorMath::Normalize(normal);
+	Vector3D normal = VectorMath::GetNormal(transformedVertices);
 	Vector3D camera_ray = camera->GetCameraLocation() - vec_a;
 
 	// if dot is negative, the face is not seen by the camera, so skip projection

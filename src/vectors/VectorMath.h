@@ -39,4 +39,6 @@ namespace VectorMath
 		scan line functions, this function has to return run over rise.
 	*/
 	float FindReciprocalSlope(const Vector2D& coordA, const Vector2D& coordB);
+
+	Vector3D GetNormal(const std::array<Vector4D, 3>& transformedVertices);
 }

@@ -2,7 +2,7 @@
 #include "colors/Colors.h"
 
 LightSource::LightSource()
-	:location(Vector3D(0, 20, 0)), intensity(1.f), color(WHITE)
+	:direction(Vector3D(0, 0, 1)), intensity(1.f), color(WHITE)
 {
 
 }

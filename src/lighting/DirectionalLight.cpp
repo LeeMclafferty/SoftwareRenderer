@@ -7,6 +7,13 @@ DirectionalLight::DirectionalLight()
 
 uint32_t DirectionalLight::ApplyLightingIntensity(uint32_t faceColor, float percentage)
 {
+	if (percentage > 1)
+		percentage = 1;
+	else if (percentage < 0)
+		percentage = 0;
+	
+
+	
 	uint32_t alpha = faceColor & 0xFF000000;
 
 	uint32_t red = ((faceColor & 0x00FF0000) >> 16) * percentage;
