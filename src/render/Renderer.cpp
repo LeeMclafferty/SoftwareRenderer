@@ -208,7 +208,7 @@ void Renderer::ProjectTriangles()
 				projectedVertices[j] = ProjectVertex(transformedVertices[j]);
 			}
 
-			uint32_t color = GetScene()->GetSun()->ApplyLightingIntensity(currentFace.GetColor(), VectorMath::DotProduct(VectorMath::GetNormal(transformedVertices), GetScene()->GetSun()->GetDirection()));
+			uint32_t color = GetScene()->GetSun()->ApplyFlatLighting(currentFace.GetColor(), VectorMath::DotProduct(VectorMath::GetNormal(transformedVertices), GetScene()->GetSun()->GetDirection()));
 			float faceDepth = (transformedVertices[0].z + transformedVertices[1].z + transformedVertices[2].z) / 3.0;
 
 			Triangle triangleToProject(

@@ -5,7 +5,7 @@ DirectionalLight::DirectionalLight()
 
 }
 
-uint32_t DirectionalLight::ApplyLightingIntensity(uint32_t faceColor, float percentage)
+uint32_t DirectionalLight::ApplyFlatLighting(uint32_t faceColor, float percentage)
 {
 	if (percentage > 1)
 		percentage = 1;

@@ -57,49 +57,53 @@ void Mesh::LoadObjData(const std::string& fileName)
 
 	while (fgets(line, 1024, file)) 
 	{
-		// Vertex information
-		if (strncmp(line, "v ", 2) == 0) 
-		{
-			Vector3D vertex;
-			sscanf_s(line, "v %f %f %f", &vertex.x, &vertex.y, &vertex.z);
-			vertices.push_back(vertex);
-		}
-		// Face information
-		if (strncmp(line, "f ", 2) == 0)
-		{
-			int vertexIndices[3];
-			int textureIndices[3];
-			int normalIndices[3];
+		PushVerticies(line);
+		PushFaces(line);
+	}
+}
 
-			// Initialize arrays to avoid undefined behavior
-			memset(vertexIndices, 0, sizeof(vertexIndices));
-			memset(textureIndices, 0, sizeof(textureIndices));
-			memset(normalIndices, 0, sizeof(normalIndices));
+void Mesh::PushVerticies(char* line)
+{
+	if (strncmp(line, "v ", 2) == 0)
+	{
+		Vector3D vertex;
+		sscanf_s(line, "v %f %f %f", &vertex.x, &vertex.y, &vertex.z);
+		vertices.push_back(vertex);
+	}
+}
 
-			int matched = sscanf_s(
-				line, "f %d/%d/%d %d/%d/%d %d/%d/%d",
-				&vertexIndices[0], &textureIndices[0], &normalIndices[0],
-				&vertexIndices[1], &textureIndices[1], &normalIndices[1],
-				&vertexIndices[2], &textureIndices[2], &normalIndices[2]
+void Mesh::PushFaces(char* line)
+{
+	if (strncmp(line, "f ", 2) == 0)
+	{
+		std::array<int, 3> vertexIndices;
+		std::array<int, 3> textureIndices;
+		std::array<int, 3> normalIndices;
+
+		// Initialize arrays to avoid undefined behavior
+		memset(&vertexIndices, 0, sizeof(vertexIndices));
+		memset(&textureIndices, 0, sizeof(textureIndices));
+		memset(&normalIndices, 0, sizeof(normalIndices));
+
+		int matched = sscanf_s(
+			line, "f %d/%d/%d %d/%d/%d %d/%d/%d",
+			&vertexIndices[0], &textureIndices[0], &normalIndices[0],
+			&vertexIndices[1], &textureIndices[1], &normalIndices[1],
+			&vertexIndices[2], &textureIndices[2], &normalIndices[2]
+		);
+
+		if (matched != 9) // If the expected format doesn't match, try other formats.
+		{
+			matched = sscanf_s(
+				line, "f %d/%d %d/%d %d/%d",
+				&vertexIndices[0], &textureIndices[0],
+				&vertexIndices[1], &textureIndices[1],
+				&vertexIndices[2], &textureIndices[2]
 			);
-
-			if (matched != 9) // If the expected format doesn't match, try other formats.
-			{
-				matched = sscanf_s(
-					line, "f %d/%d %d/%d %d/%d",
-					&vertexIndices[0], &textureIndices[0],
-					&vertexIndices[1], &textureIndices[1],
-					&vertexIndices[2], &textureIndices[2]
-				);
-			}
-
-			std::array<int, 3> indices;
-			indices[0] = vertexIndices[0];
-			indices[1] = vertexIndices[1];
-			indices[2] = vertexIndices[2];
-			Face face(indices, WHITE);
-			faces.push_back(face);
 		}
+
+		Face face(vertexIndices, textureIndices, normalIndices, WHITE);
+		faces.push_back(face);
 	}
 }
 

@@ -14,7 +14,7 @@ public:
 	void SetIntensity(float val) { intensity = val; }
 	void SetColor(uint32_t newColor) { color = newColor; }
 
-	virtual uint32_t ApplyLightingIntensity(uint32_t faceColor, float percentage) = 0;
+	virtual uint32_t ApplyFlatLighting(uint32_t faceColor, float percentage) = 0;
 
 private:
 	Vector3D direction;

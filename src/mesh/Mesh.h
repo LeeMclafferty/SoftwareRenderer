@@ -34,5 +34,7 @@ private:
 	std::string name;
 
 	void LoadObjData(const std::string& filename);
+	void PushVerticies(char* line);
+	void PushFaces(char* line);
 };
 
