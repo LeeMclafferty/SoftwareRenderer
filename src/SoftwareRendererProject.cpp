@@ -10,6 +10,8 @@ int main(int argc, char* args[])
     Window window;
     Renderer renderer;
     Scene scene(&window);
+    Mesh ball(".\\assets\\ball.obj", "ball");
+    scene.AddToMeshes(&ball);
     Engine engine(&renderer, &scene, &window);
     renderer.SetEngine(&engine);
 

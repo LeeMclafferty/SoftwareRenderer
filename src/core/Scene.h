@@ -38,7 +38,6 @@ private:
 	std::unordered_map<std::string, Mesh*> meshesInScene;
 	
 	Camera viewportCamera;
-	Mesh testingMesh;
 
 	class Window* window;
 

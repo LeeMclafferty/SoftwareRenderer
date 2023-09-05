@@ -16,7 +16,7 @@ struct Matrix4x4
 		} };
 	}
 
-	Vector4D operator*(const Vector4D& vec)
+	Vector4D operator*(const Vector4D& vec) const
 	{
 		Vector4D result;
 		result.x = matrix[0][0] * vec.x + matrix[0][1] * vec.y + matrix[0][2] * vec.z + matrix[0][3] * vec.w;
@@ -26,7 +26,7 @@ struct Matrix4x4
 		return result;
 	}
 
-	Matrix4x4 operator*(const Matrix4x4& mat)
+	Matrix4x4 operator*(const Matrix4x4& mat) const
 	{
 		Matrix4x4 result;
 

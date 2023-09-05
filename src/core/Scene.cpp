@@ -5,13 +5,12 @@
 
 
 Scene::Scene(Window* win)
-	:viewportCamera(1, (float)win->GetHeight() / (float)win->GetWidth()), testingMesh(), window(win), sun()
+	:viewportCamera(1, (float)win->GetHeight() / (float)win->GetWidth()), window(win), sun()
 {
 	if (!win)
 	{
 		throw std::invalid_argument("Window is required to construct Scene Object");
 	}
-	AddToMeshes(&testingMesh);
 	AddToCameras(&viewportCamera);
 }
 
@@ -62,10 +61,8 @@ void Scene::AddToCameras(Camera* cam)
 	{
 		return search->second; // Return a reference to the Mesh
 	}
-	else
-	{
-		throw std::runtime_error("Mesh not found");
-	}
+	
+	return nullptr;
 }
 
 void Scene::AddToMeshes(Mesh* mesh)

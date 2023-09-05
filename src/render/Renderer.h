@@ -54,5 +54,12 @@ private:
 	std::shared_ptr<Mesh> meshToRender;
 
 	Matrix4x4 projectionMatrix;
+
+	void UpdateMeshToRender();
+	void ProjectTriangles();
+	Matrix4x4 BuildTransformationMatrix() const;
+	Vector4D TransformVertex(const Vector3D& vertex, const Matrix4x4& transformationMatrix);
+	bool ShouldCullFace(const std::array<Vector4D, 3>& transformedVertices);
+	Vector4D ProjectVertex(const Vector4D& vertex);
 };
 
