@@ -2,13 +2,14 @@
 #include <array>
 #include <iostream>
 #include "SDL.h"
+#include "texture/Texture2D.h"
 #include "vectors/VectorTypes.h"
 
 class Triangle
 {
 public:
 	Triangle();
-	Triangle(std::array<Vector2D, 3> coords, int32_t color, float depth);
+	Triangle(std::array<Vector2D, 3> coords, std::array<Texture2D, 3> textCoordinates, int32_t color, float depth);
 	
 	std::array<Vector2D, 3> GetCoordinates() const { return coordinates; }
 	const uint32_t GetFaceColor() const { return faceColor; }
@@ -19,7 +20,10 @@ public:
 
 private:
 	std::array<Vector2D, 3> coordinates;
+	std::array<Texture2D, 3> textureCoordinates;
+
 	uint32_t faceColor;
 	float avgVertexDepth;
+
 };
 

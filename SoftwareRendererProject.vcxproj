@@ -171,6 +171,7 @@
     <ClCompile Include="src\core\Window.cpp" />
     <ClCompile Include="src\primatives\Triangle.cpp" />
     <ClCompile Include="src\vectors\VectorMath.cpp" />
+    <ClCompile Include="src\texture\Texture2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\lighting\DirectionalLight.h" />
@@ -190,6 +191,7 @@
     <ClInclude Include="src\vectors\VectorTypes.h" />
     <ClInclude Include="src\core\Window.h" />
     <ClInclude Include="src\primatives\Triangle.h" />
+    <ClInclude Include="src\texture\Texture2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

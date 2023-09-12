@@ -103,6 +103,23 @@ Vector3D VectorMath::GetNormal(const std::array<Vector4D, 3>& transformedVertice
 	return normal;
 }
 
+Vector3D VectorMath::GetNormal(const std::array<Vector3D, 3>& transformedVertices)
+{
+	Vector3D vec_a = transformedVertices[0];
+	Vector3D vec_b = transformedVertices[2];
+	Vector3D vec_c = transformedVertices[1];
+
+	Vector3D vec_ab = vec_b - vec_a;
+	Vector3D vec_ac = vec_c - vec_a;
+	VectorMath::Normalize(vec_ab);
+	VectorMath::Normalize(vec_ac);
+
+	Vector3D normal = VectorMath::CrossProduct(vec_ab, vec_ac);
+	VectorMath::Normalize(normal);
+
+	return normal;
+}
+
 void VectorMath::Normalize(Vector3D& v)
 {
 	float len = Length(v);

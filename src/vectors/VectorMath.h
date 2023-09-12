@@ -41,4 +41,5 @@ namespace VectorMath
 	float FindReciprocalSlope(const Vector2D& coordA, const Vector2D& coordB);
 
 	Vector3D GetNormal(const std::array<Vector4D, 3>& transformedVertices);
+	Vector3D GetNormal(const std::array<Vector3D, 3>& transformedVertices);
 }

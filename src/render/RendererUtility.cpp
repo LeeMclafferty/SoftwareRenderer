@@ -47,6 +47,7 @@ void RendererUtility::DrawFilledRectangle(int xPos, int yPos, int width, int hei
 void RendererUtility::DrawPixel(int xPos, int yPos, uint32_t color)
 {
 	if (!owner) return;
+
 	if (xPos >= 0 && yPos >= 0 && xPos < owner->GetWindowWidth() && yPos < owner->GetWindowHeight())
 	{
 		owner->AddToColorBuffer((owner->GetWindowWidth() * yPos) + xPos, color);
@@ -87,10 +88,10 @@ void RendererUtility::DisplayWireFrame(const Triangle& triangle)
 
 void RendererUtility::DisplayFaces(Triangle& triangle)
 {
-	Vector2D v1(triangle.GetCoordinates()[0].x, triangle.GetCoordinates()[0].y);
-	Vector2D v2(triangle.GetCoordinates()[1].x, triangle.GetCoordinates()[1].y);
-	Vector2D v3(triangle.GetCoordinates()[2].x, triangle.GetCoordinates()[2].y);
-	DrawFilledTriangle(triangle, triangle.GetFaceColor() );
+// 	Vector2D v1(triangle.GetCoordinates()[0].x, triangle.GetCoordinates()[0].y);
+// 	Vector2D v2(triangle.GetCoordinates()[1].x, triangle.GetCoordinates()[1].y);
+// 	Vector2D v3(triangle.GetCoordinates()[2].x, triangle.GetCoordinates()[2].y);
+	DrawFilledTriangle(triangle, triangle.GetFaceColor());
 }
 
 /* Draw Rectangle instead of pixel just so the vertices look bigger */
@@ -99,6 +100,11 @@ void RendererUtility::DisplayVertices(const Triangle& triangle)
 	DrawFilledRectangle(triangle.GetCoordinates()[0].x, triangle.GetCoordinates()[0].y, 4, 4, LIME_GREEN);
 	DrawFilledRectangle(triangle.GetCoordinates()[1].x, triangle.GetCoordinates()[1].y, 4, 4, LIME_GREEN);
 	DrawFilledRectangle(triangle.GetCoordinates()[2].x, triangle.GetCoordinates()[2].y, 4, 4, LIME_GREEN);
+}
+
+void RendererUtility::DisplayTexturedTriangle(Triangle& triangle)
+{
+	DrawTexturedTriangle(triangle, triangle.GetFaceColor());
 }
 
 bool RendererUtility::ShouldCullFace(const std::array<Vector4D, 3>& transformedVertices)
@@ -174,6 +180,11 @@ void RendererUtility::DrawFilledTriangle(Triangle& triangle, uint32_t color)
 	}
 }
 
+void RendererUtility::DrawTexturedTriangle(Triangle& triangle, std::vector<uint32_t> texture)
+{
+
+}
+
 void RendererUtility::FillFlatTopTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color)
 {
 	float slopeLeft = VectorMath::FindReciprocalSlope({ vecA.x, vecA.y }, { vecC.x, vecC.y });
@@ -226,6 +237,11 @@ void RendererUtility::RenderByState(Triangle& triangle)
 	{
 		DisplayWireFrame(triangle);
 	}
+
+	if (ShouldRenderTexture())
+	{
+		DisplayTexturedTriangle(triangle);
+	}
 }
 
 bool RendererUtility::ShouldRenderFaces()
@@ -256,6 +272,17 @@ bool RendererUtility::ShouldRenderWireframe()
 
 	std::vector<RenderState> compatibleStates {
 		RenderState::WireFrame, RenderState::WireFrameFaces, RenderState::VerticesWireFrame, RenderState::All
+	};
+
+	return CheckForMatchingState(owner, compatibleStates);
+}
+
+bool RendererUtility::ShouldRenderTexture()
+{
+	if (!owner) return false;
+
+	std::vector<RenderState> compatibleStates {
+		RenderState::Textured, RenderState::TexturedWireFrame, RenderState::All
 	};
 
 	return CheckForMatchingState(owner, compatibleStates);

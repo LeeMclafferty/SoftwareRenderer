@@ -105,10 +105,7 @@ void Renderer::Update()
 {
 
 	UpdateMeshToRender();
-	// =======================================================================
 	ProjectTriangles();
-	// =========================================================================================
-	
 
 	/* Simple depth sort - painter's algorithm - Replace with z buffer*/
 	for (int i = 0; i <= GetScene()->GetTrianglesToRender().size() - 1; i++)
@@ -164,8 +161,8 @@ void Renderer::UpdateMeshToRender()
 	/* I want to add the functionality to loop over all meshes stored in scene and render them. I might need to move assigning the mesh to render to a UpdateScene function later. */
 	if (!meshToRender)
 	{
-		meshToRender = std::shared_ptr<Mesh>(GetScene()->GetMesh("ball"));
-		//meshToRender = std::make_shared<Mesh>();
+		//meshToRender = std::shared_ptr<Mesh>(GetScene()->GetMesh("ball"));
+		meshToRender = std::make_shared<Mesh>();
 	}
 
 	meshToRender->SetRotation(Vector3D(
@@ -208,15 +205,22 @@ void Renderer::ProjectTriangles()
 				projectedVertices[j] = ProjectVertex(transformedVertices[j]);
 			}
 
+			/* Need to implement z-buffer to have pixel depth per pixel before I can do smooth shading */
 			uint32_t color = GetScene()->GetSun()->ApplyFlatLighting(currentFace.GetColor(), VectorMath::DotProduct(VectorMath::GetNormal(transformedVertices), GetScene()->GetSun()->GetDirection()));
+
 			float faceDepth = (transformedVertices[0].z + transformedVertices[1].z + transformedVertices[2].z) / 3.0;
 
 			Triangle triangleToProject(
 				std::array<Vector2D, 3> {
-				Vector2D(projectedVertices[0].x, projectedVertices[0].y),
+					Vector2D(projectedVertices[0].x, projectedVertices[0].y),
 					Vector2D(projectedVertices[1].x, projectedVertices[1].y),
 					Vector2D(projectedVertices[2].x, projectedVertices[2].y)
-			},
+				},
+				std::array<Texture2D, 3> {
+					Texture2D(currentFace.GetUvCoordinates()[0]),
+					Texture2D(currentFace.GetUvCoordinates()[1]),
+					Texture2D(currentFace.GetUvCoordinates()[2])
+				},
 				color,
 				faceDepth
 			);
@@ -263,6 +267,7 @@ bool Renderer::ShouldCullFace(const std::array<Vector4D, 3>& transformedVertices
 Vector4D Renderer::ProjectVertex(const Vector4D& vertex) 
 {
 	Vector4D projected = MatrixMath::PerspectiveDivide(projectionMatrix, vertex);
+	projected.y *= -1; // Inverse y to be projected right side-up.
 	projected.x = (projected.x) * 0.5 * GetWindowWidth() + (GetWindowWidth() / 2.f);
 	projected.y = (projected.y) * 0.5 * GetWindowHeight() + (GetWindowHeight() / 2.f);
 	return projected;

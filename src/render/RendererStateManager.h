@@ -6,7 +6,9 @@ enum class RenderState
 	VerticesWireFrame,
 	WireFrame,
 	WireFrameFaces,
+	TexturedWireFrame,
 	FacesOnly,
+	Textured,
 	All
 };
 

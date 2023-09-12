@@ -57,6 +57,14 @@ void InputHandler::ProcessInput()
 		{
 			renderer->SetState(RenderState::All);
 		}
+		else if (event.key.keysym.sym == SDLK_7)
+		{
+			renderer->SetState(RenderState::Textured);
+		}
+		else if (event.key.keysym.sym == SDLK_8)
+		{
+			renderer->SetState(RenderState::TexturedWireFrame);
+		}
 		else if (event.key.keysym.sym == SDLK_i)
 		{
 			camera->IncreaseZoom(1.f);
