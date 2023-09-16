@@ -63,7 +63,7 @@
     <ClCompile Include="src\lighting\DirectionalLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\texture\Texture2D.cpp">
+    <ClCompile Include="src\texture\TextureCoord.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -119,7 +119,7 @@
     <ClInclude Include="src\lighting\DirectionalLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\texture\Texture2D.h">
+    <ClInclude Include="src\texture\TextureCoord.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

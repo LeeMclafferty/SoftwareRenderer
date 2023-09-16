@@ -30,10 +30,12 @@ public:
 
 	void DrawTriangleWireFrame(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color);
 	void DrawFilledTriangle(Triangle& triangle, uint32_t color);
-	void DrawTexturedTriangle(Triangle& triangle, std::vector<uint32_t> texture);
+	void DrawTexturedTriangle(Triangle& triangle, Texture2D& texture);
 	void FillFlatTopTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color);
+	void FillFlatTopTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, const Texture2D& texture);
 	void FillFlatBottomTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color);
 
+	void FillFlatBottomTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, const Texture2D& texture);
 	void RenderByState(Triangle& triangle);
 private:
 	Renderer* owner;

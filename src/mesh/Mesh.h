@@ -4,6 +4,7 @@
 #include "SDL.h"
 #include "vectors/VectorTypes.h"
 #include "Face.h"
+#include "texture/Texture.h"
 
 class Mesh
 {
@@ -17,6 +18,7 @@ public:
 	Vector3D GetRotation() const { return rotation; }
 	Vector3D GetScale() const { return scale; }
 	Vector3D GetLocation() const { return translation; }
+	Texture2D GetTexture() const { return texture; }
 
 	void SetRotation(Vector3D rot) { rotation = rot; }
 	void SetScale(Vector3D newScale) { scale = newScale; }
@@ -36,5 +38,7 @@ private:
 	void LoadObjData(const std::string& filename);
 	void PushVerticies(char* line);
 	void PushFaces(char* line);
+
+	Texture2D texture;
 };
 

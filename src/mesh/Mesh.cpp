@@ -23,23 +23,23 @@ Mesh::Mesh()
 
 	faces = {
 		// front
-		{ {1, 2, 3}, {Texture2D(0, 0), Texture2D(0, 1), Texture2D(0, 1)}, CORAL},
-		{ {1, 3, 4}, {Texture2D(0, 0), Texture2D(1, 1), Texture2D(1, 0)}, CORAL },
+		{ {1, 2, 3}, {TextureCoord(0, 0), TextureCoord(0, 1), TextureCoord(0, 1)}, CORAL},
+		{ {1, 3, 4}, {TextureCoord(0, 0), TextureCoord(1, 1), TextureCoord(1, 0)}, CORAL },
 		// right
-		{ {4, 3, 5}, {Texture2D(0, 0), Texture2D(0, 1), Texture2D(0, 1)}, SEA_GREEN },
-		{ {4, 5, 6}, {Texture2D(0, 0), Texture2D(1, 1), Texture2D(1, 0)}, SEA_GREEN },
+		{ {4, 3, 5}, {TextureCoord(0, 0), TextureCoord(0, 1), TextureCoord(0, 1)}, SEA_GREEN },
+		{ {4, 5, 6}, {TextureCoord(0, 0), TextureCoord(1, 1), TextureCoord(1, 0)}, SEA_GREEN },
 		// back
-		{ {6, 5, 7}, {Texture2D(0, 0), Texture2D(0, 1), Texture2D(0, 1)}, SKY_BLUE },
-		{ {6, 7, 8}, {Texture2D(0, 0), Texture2D(1, 1), Texture2D(1, 0)}, SKY_BLUE},
+		{ {6, 5, 7}, {TextureCoord(0, 0), TextureCoord(0, 1), TextureCoord(0, 1)}, SKY_BLUE },
+		{ {6, 7, 8}, {TextureCoord(0, 0), TextureCoord(1, 1), TextureCoord(1, 0)}, SKY_BLUE},
 		// left
-		{ {8, 7, 2}, {Texture2D(0, 0), Texture2D(0, 1), Texture2D(0, 1)}, GOLD },
-		{ {8, 2, 1}, {Texture2D(0, 0), Texture2D(1, 1), Texture2D(1, 0)}, GOLD},
+		{ {8, 7, 2}, {TextureCoord(0, 0), TextureCoord(0, 1), TextureCoord(0, 1)}, GOLD },
+		{ {8, 2, 1}, {TextureCoord(0, 0), TextureCoord(1, 1), TextureCoord(1, 0)}, GOLD},
 		// top
-		{ {2, 7, 5}, {Texture2D(0, 0), Texture2D(0, 1), Texture2D(0, 1)}, MEDIUM_PURPLE },
-		{ {2, 5, 3}, {Texture2D(0, 0), Texture2D(1, 1), Texture2D(1, 0)}, MEDIUM_PURPLE },
+		{ {2, 7, 5}, {TextureCoord(0, 0), TextureCoord(0, 1), TextureCoord(0, 1)}, MEDIUM_PURPLE },
+		{ {2, 5, 3}, {TextureCoord(0, 0), TextureCoord(1, 1), TextureCoord(1, 0)}, MEDIUM_PURPLE },
 		// bottom
-		{ {6, 8, 1}, {Texture2D(0, 0), Texture2D(0, 1), Texture2D(0, 1)}, DEEP_PINK },
-		{ {6, 1, 4}, {Texture2D(0, 0), Texture2D(1, 1), Texture2D(1, 0)}, DEEP_PINK }
+		{ {6, 8, 1}, {TextureCoord(0, 0), TextureCoord(0, 1), TextureCoord(0, 1)}, DEEP_PINK },
+		{ {6, 1, 4}, {TextureCoord(0, 0), TextureCoord(1, 1), TextureCoord(1, 0)}, DEEP_PINK }
 	};
 }
 

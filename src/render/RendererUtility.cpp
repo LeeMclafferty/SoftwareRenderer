@@ -104,7 +104,7 @@ void RendererUtility::DisplayVertices(const Triangle& triangle)
 
 void RendererUtility::DisplayTexturedTriangle(Triangle& triangle)
 {
-	DrawTexturedTriangle(triangle, triangle.GetFaceColor());
+	DrawTexturedTriangle(triangle, triangle.GetTexture());
 }
 
 bool RendererUtility::ShouldCullFace(const std::array<Vector4D, 3>& transformedVertices)
@@ -151,9 +151,9 @@ void RendererUtility::DrawTriangleWireFrame(const Vector2D& vecA, const Vector2D
 
 void RendererUtility::DrawFilledTriangle(Triangle& triangle, uint32_t color)
 {
-	Vector2D& vecA = triangle.GetCoordinates()[0];
-	Vector2D& vecB = triangle.GetCoordinates()[1];
-	Vector2D& vecC = triangle.GetCoordinates()[2];
+	Vector2D vecA = triangle.GetCoordinates()[0];
+	Vector2D vecB = triangle.GetCoordinates()[1];
+	Vector2D vecC = triangle.GetCoordinates()[2];
 
 	triangle.SortVerticesAsc(vecA, vecB, vecC);
 
@@ -180,9 +180,30 @@ void RendererUtility::DrawFilledTriangle(Triangle& triangle, uint32_t color)
 	}
 }
 
-void RendererUtility::DrawTexturedTriangle(Triangle& triangle, std::vector<uint32_t> texture)
+void RendererUtility::DrawTexturedTriangle(Triangle& triangle, Texture2D& texture)
 {
+	triangle.SortVerticesAsc(triangle);
 
+	Vector2D& vecA = triangle.GetCoordinates()[0];
+	Vector2D& vecB = triangle.GetCoordinates()[1];
+	Vector2D& vecC = triangle.GetCoordinates()[2];
+
+	if (vecB.y == vecC.y)
+	{
+		FillFlatBottomTriangle(vecA, vecB, vecC, texture);
+	}
+	else if (vecA.y == vecB.y)
+	{
+		FillFlatTopTriangle(vecA, vecB, vecC, texture);
+	}
+	else
+	{
+		int my = vecB.y;
+		int mx = (((vecC.x - vecA.x) * (vecB.y - vecA.y)) / (vecC.y - vecA.y)) + vecA.x;
+
+		FillFlatTopTriangle(vecB, Vector2D(mx, my), vecC, texture);
+		FillFlatBottomTriangle(vecA, vecB, Vector2D(mx, my), texture);
+	}
 }
 
 void RendererUtility::FillFlatTopTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color)
@@ -201,12 +222,24 @@ void RendererUtility::FillFlatTopTriangle(const Vector2D& vecA, const Vector2D& 
 	}
 }
 
+void RendererUtility::FillFlatTopTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, const Texture2D& texture)
+{
+	float slopeLeft = VectorMath::FindReciprocalSlope({ vecA.x, vecA.y }, { vecC.x, vecC.y });
+	float slopeRight = VectorMath::FindReciprocalSlope({ vecB.x, vecB.y }, { vecC.x, vecC.y });
+
+	float xStart = vecC.x;
+	float xEnd = vecC.x;
+
+	for (int y = vecC.y; y >= vecA.y; y--)
+	{
+		xStart -= slopeLeft;
+		xEnd -= slopeRight;
+	}
+}
+
+/* For drawing colors with no textures */
 void RendererUtility::FillFlatBottomTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color)
 {
-	/*
-	Passed coordinates in the "incorrect" order to get the inverse slope value.
-	We inverse them since y increases going down in screen space.
-	*/
 	float inverseSlopeLeft = VectorMath::FindReciprocalSlope({ vecA.x, vecA.y }, { vecB.x, vecB.y });
 	float inverseSlopeRight = VectorMath::FindReciprocalSlope({ vecC.x, vecC.y }, { vecA.x, vecA.y });
 
@@ -218,6 +251,29 @@ void RendererUtility::FillFlatBottomTriangle(const Vector2D& vecA, const Vector2
 		DrawLine(xStart, y, xEnd, y, color);
 		xStart += inverseSlopeLeft;
 		xEnd += inverseSlopeRight;
+	}
+}
+
+void RendererUtility::FillFlatBottomTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, const Texture2D& texture)
+{
+	float inverseSlopeLeft = VectorMath::FindReciprocalSlope({ vecA.x, vecA.y }, { vecB.x, vecB.y });
+	float inverseSlopeRight = VectorMath::FindReciprocalSlope({ vecC.x, vecC.y }, { vecA.x, vecA.y });
+
+	for (int y = vecA.y; y <= vecB.y; y++)
+	{
+		int xStart = vecB.x + (y - vecB.y) * inverseSlopeLeft;
+		int xEnd = vecA.x + (y - vecA.y) * inverseSlopeRight;
+
+		if(vecB.y - vecA.y == 0) continue;
+
+		for (int x = xStart; x < xEnd; x++)
+		{
+			if (xEnd < xStart)
+			{
+				std::swap(xStart, xEnd);
+			}
+			DrawPixel(x, y, PINK);
+		}
 	}
 }
 

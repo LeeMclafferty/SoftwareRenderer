@@ -216,11 +216,7 @@ void Renderer::ProjectTriangles()
 					Vector2D(projectedVertices[1].x, projectedVertices[1].y),
 					Vector2D(projectedVertices[2].x, projectedVertices[2].y)
 				},
-				std::array<Texture2D, 3> {
-					Texture2D(currentFace.GetUvCoordinates()[0]),
-					Texture2D(currentFace.GetUvCoordinates()[1]),
-					Texture2D(currentFace.GetUvCoordinates()[2])
-				},
+				meshToRender->GetTexture(),
 				color,
 				faceDepth
 			);
