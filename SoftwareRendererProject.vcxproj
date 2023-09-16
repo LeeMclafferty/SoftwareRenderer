@@ -170,6 +170,7 @@
     <ClCompile Include="src\SoftwareRendererProject.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
     <ClCompile Include="src\primatives\Triangle.cpp" />
+    <ClCompile Include="src\texture\Texture.cpp" />
     <ClCompile Include="src\vectors\VectorMath.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +187,7 @@
     <ClInclude Include="src\colors\Colors.h" />
     <ClInclude Include="src\render\Renderer.h" />
     <ClInclude Include="src\core\Engine.h" />
+    <ClInclude Include="src\texture\Texture.h" />
     <ClInclude Include="src\vectors\VectorMath.h" />
     <ClInclude Include="src\vectors\VectorTypes.h" />
     <ClInclude Include="src\core\Window.h" />
