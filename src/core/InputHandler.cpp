@@ -35,35 +35,31 @@ void InputHandler::ProcessInput()
 		}
 		else if (event.key.keysym.sym == SDLK_1)
 		{
-			renderer->SetState(RenderState::FacesOnly);
+			renderer->SetState(RenderState::All);
 		}
 		else if (event.key.keysym.sym == SDLK_2)
 		{
-			renderer->SetState(RenderState::WireFrame);
+			renderer->SetState(RenderState::Textured);
 		}
 		else if (event.key.keysym.sym == SDLK_3)
 		{
-			renderer->SetState(RenderState::VerticesOnly);
+			renderer->SetState(RenderState::TexturedWireFrame);
 		}
 		else if (event.key.keysym.sym == SDLK_4)
 		{
-			renderer->SetState(RenderState::VerticesWireFrame);
-		}
-		else if (event.key.keysym.sym == SDLK_5)
-		{
 			renderer->SetState(RenderState::WireFrameFaces);
+		}
+		else if(event.key.keysym.sym == SDLK_5)
+		{
+			renderer->SetState(RenderState::FacesOnly);
 		}
 		else if (event.key.keysym.sym == SDLK_6)
 		{
-			renderer->SetState(RenderState::All);
+			renderer->SetState(RenderState::WireFrame);
 		}
 		else if (event.key.keysym.sym == SDLK_7)
 		{
-			renderer->SetState(RenderState::Textured);
-		}
-		else if (event.key.keysym.sym == SDLK_8)
-		{
-			renderer->SetState(RenderState::TexturedWireFrame);
+			renderer->SetState(RenderState::VerticesWireFrame);
 		}
 		else if (event.key.keysym.sym == SDLK_i)
 		{

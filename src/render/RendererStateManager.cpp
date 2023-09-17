@@ -1,7 +1,7 @@
 #include "RendererStateManager.h"
 
 RendererStateManager::RendererStateManager()
-	:renderState(RenderState::All)
+	:renderState(RenderState::WireFrame)
 {
 
 }

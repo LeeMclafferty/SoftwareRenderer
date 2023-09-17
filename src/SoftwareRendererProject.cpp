@@ -11,6 +11,7 @@ int main(int argc, char* args[])
     Renderer renderer;
     Scene scene(&window);
     Mesh ball(".\\assets\\ball.obj", "ball");
+    Mesh dino(".\\assets\\dino.obj", "dino");
     scene.AddToMeshes(&ball);
     Engine engine(&renderer, &scene, &window);
     renderer.SetEngine(&engine);

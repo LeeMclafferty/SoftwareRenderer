@@ -41,6 +41,8 @@ Mesh::Mesh()
 		{ {6, 8, 1}, {TextureCoord(0, 0), TextureCoord(0, 1), TextureCoord(0, 1)}, DEEP_PINK },
 		{ {6, 1, 4}, {TextureCoord(0, 0), TextureCoord(1, 1), TextureCoord(1, 0)}, DEEP_PINK }
 	};
+
+	texture = Texture2D();
 }
 
 Mesh::Mesh(std::string file, std::string meshName)

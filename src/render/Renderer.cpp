@@ -167,8 +167,8 @@ void Renderer::UpdateMeshToRender()
 
 	meshToRender->SetRotation(Vector3D(
 		meshToRender->GetRotation().x + .01,
-		meshToRender->GetRotation().y + .01,
-		meshToRender->GetRotation().z + .01
+		meshToRender->GetRotation().y + .00,
+		meshToRender->GetRotation().z + .00
 	));
 }
 
@@ -216,7 +216,6 @@ void Renderer::ProjectTriangles()
 					Vector2D(projectedVertices[1].x, projectedVertices[1].y),
 					Vector2D(projectedVertices[2].x, projectedVertices[2].y)
 				},
-				meshToRender->GetTexture(),
 				color,
 				faceDepth
 			);

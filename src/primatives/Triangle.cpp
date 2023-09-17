@@ -13,8 +13,8 @@ Triangle::Triangle()
 
 }
 
-Triangle::Triangle(std::array<Vector2D, 3> coords, std::array<TextureCoord, 3> textCoordinates, int32_t color, float depth)
-	:coordinates(coords), textureCoordinates(textCoordinates), faceColor(color), avgVertexDepth(depth)
+Triangle::Triangle(std::array<Vector2D, 3> coords, int32_t color, float depth)
+	:coordinates(coords), faceColor(color), avgVertexDepth(depth)
 {
 
 }

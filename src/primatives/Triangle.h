@@ -9,7 +9,7 @@ class Triangle
 {
 public:
 	Triangle();
-	Triangle(std::array<Vector2D, 3> coords, std::array<TextureCoord, 3> textCoordinates, int32_t color, float depth);
+	Triangle(std::array<Vector2D, 3> coords, int32_t color, float depth);
 	Triangle(std::array<Vector2D, 3> coords, std::array<TextureCoord, 3> textCoordinates, Texture2D text, float depth);
 	Triangle(std::array<Vector2D, 3> coords, Texture2D text, int32_t color, float depth);
 	Triangle(std::array<Vector2D, 3> coords, std::array<TextureCoord, 3> textCoordinates, Texture2D text, int32_t color, float depth);

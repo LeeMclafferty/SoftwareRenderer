@@ -88,9 +88,6 @@ void RendererUtility::DisplayWireFrame(const Triangle& triangle)
 
 void RendererUtility::DisplayFaces(Triangle& triangle)
 {
-// 	Vector2D v1(triangle.GetCoordinates()[0].x, triangle.GetCoordinates()[0].y);
-// 	Vector2D v2(triangle.GetCoordinates()[1].x, triangle.GetCoordinates()[1].y);
-// 	Vector2D v3(triangle.GetCoordinates()[2].x, triangle.GetCoordinates()[2].y);
 	DrawFilledTriangle(triangle, triangle.GetFaceColor());
 }
 
@@ -266,12 +263,12 @@ void RendererUtility::FillFlatBottomTriangle(const Vector2D& vecA, const Vector2
 
 		if(vecB.y - vecA.y == 0) continue;
 
+		if (xEnd < xStart)
+		{
+			std::swap(xStart, xEnd);
+		}
 		for (int x = xStart; x < xEnd; x++)
 		{
-			if (xEnd < xStart)
-			{
-				std::swap(xStart, xEnd);
-			}
 			DrawPixel(x, y, PINK);
 		}
 	}
@@ -305,7 +302,7 @@ bool RendererUtility::ShouldRenderFaces()
 	if (!owner) return false;
 
 	std::vector<RenderState> compatibleStates {
-		RenderState::FacesOnly, RenderState::WireFrameFaces, RenderState::All
+		RenderState::FacesOnly, RenderState::WireFrameFaces
 	};
 
 	return CheckForMatchingState(owner, compatibleStates);
@@ -316,7 +313,7 @@ bool RendererUtility::ShouldRenderVertices()
 	if (!owner) return false;
 
 	std::vector<RenderState> compatibleStates {
-		RenderState::VerticesOnly, RenderState::VerticesWireFrame, RenderState::All
+		RenderState::VerticesOnly, RenderState::VerticesWireFrame
 	};
 
 	return CheckForMatchingState(owner, compatibleStates);
