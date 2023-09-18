@@ -221,16 +221,24 @@ void RendererUtility::FillFlatTopTriangle(const Vector2D& vecA, const Vector2D& 
 
 void RendererUtility::FillFlatTopTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, const Texture2D& texture)
 {
-	float slopeLeft = VectorMath::FindReciprocalSlope({ vecA.x, vecA.y }, { vecC.x, vecC.y });
-	float slopeRight = VectorMath::FindReciprocalSlope({ vecB.x, vecB.y }, { vecC.x, vecC.y });
+	float inverseSlopeLeft = VectorMath::FindReciprocalSlope({ vecC.x, vecC.y }, { vecB.x, vecB.y });
+	float inverseSlopeRight = VectorMath::FindReciprocalSlope({ vecC.x, vecC.y }, { vecA.x, vecA.y });
 
-	float xStart = vecC.x;
-	float xEnd = vecC.x;
-
-	for (int y = vecC.y; y >= vecA.y; y--)
+	for (int y = vecB.y; y <= vecC.y; y++)
 	{
-		xStart -= slopeLeft;
-		xEnd -= slopeRight;
+		int xStart = vecB.x + (y - vecB.y) * inverseSlopeLeft;
+		int xEnd = vecA.x + (y - vecA.y) * inverseSlopeRight;
+
+		if (vecC.y - vecB.y == 0) continue;
+
+		if (xEnd < xStart)
+		{
+			std::swap(xStart, xEnd);
+		}
+		for (int x = xStart; x < xEnd; x++)
+		{
+			DrawPixel(x, y, CORAL);
+		}
 	}
 }
 
@@ -269,7 +277,7 @@ void RendererUtility::FillFlatBottomTriangle(const Vector2D& vecA, const Vector2
 		}
 		for (int x = xStart; x < xEnd; x++)
 		{
-			DrawPixel(x, y, PINK);
+			DrawPixel(x, y, CYAN);
 		}
 	}
 }
