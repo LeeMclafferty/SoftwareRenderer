@@ -17,7 +17,8 @@ public:
 	std::array<Vector2D, 3> GetCoordinates() const { return coordinates; }
 	const uint32_t GetFaceColor() const { return faceColor; }
 	const float GetAvgVertexDepth() const { return avgVertexDepth; }
-	Texture2D& GetTexture() { return texture; }
+	Texture2D GetTexture() { return texture; }
+	std::array<TextureCoord, 3> GetTextureCoordinates() const { return textureCoordinates; }
 
 	void SetFaceColor(uint32_t color) { faceColor = color; }
 	void SortVerticesAsc(Triangle& triangle);

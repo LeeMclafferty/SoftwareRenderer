@@ -101,7 +101,7 @@ void RendererUtility::DisplayVertices(const Triangle& triangle)
 
 void RendererUtility::DisplayTexturedTriangle(Triangle& triangle)
 {
-	DrawTexturedTriangle(triangle, triangle.GetTexture());
+	DrawTexturedTriangle(triangle);
 }
 
 bool RendererUtility::ShouldCullFace(const std::array<Vector4D, 3>& transformedVertices)
@@ -177,7 +177,7 @@ void RendererUtility::DrawFilledTriangle(Triangle& triangle, uint32_t color)
 	}
 }
 
-void RendererUtility::DrawTexturedTriangle(Triangle& triangle, Texture2D& texture)
+void RendererUtility::DrawTexturedTriangle(Triangle& triangle)
 {
 	triangle.SortVerticesAsc(triangle);
 
@@ -187,19 +187,19 @@ void RendererUtility::DrawTexturedTriangle(Triangle& triangle, Texture2D& textur
 
 	if (vecB.y == vecC.y)
 	{
-		FillFlatBottomTriangle(vecA, vecB, vecC, texture);
+		FillFlatBottomTriangle(triangle, vecC);
 	}
 	else if (vecA.y == vecB.y)
 	{
-		FillFlatTopTriangle(vecA, vecB, vecC, texture);
+		FillFlatTopTriangle(triangle, vecC);
 	}
 	else
 	{
 		int my = vecB.y;
 		int mx = (((vecC.x - vecA.x) * (vecB.y - vecA.y)) / (vecC.y - vecA.y)) + vecA.x;
 
-		FillFlatTopTriangle(vecB, Vector2D(mx, my), vecC, texture);
-		FillFlatBottomTriangle(vecA, vecB, Vector2D(mx, my), texture);
+		FillFlatTopTriangle(triangle, Vector2D(mx, my));
+		FillFlatBottomTriangle(triangle, Vector2D(mx, my));
 	}
 }
 
@@ -219,8 +219,11 @@ void RendererUtility::FillFlatTopTriangle(const Vector2D& vecA, const Vector2D& 
 	}
 }
 
-void RendererUtility::FillFlatTopTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, const Texture2D& texture)
+void RendererUtility::FillFlatTopTriangle(Triangle& tri, const Vector2D& vecC)
 {
+	Vector2D& vecA = tri.GetCoordinates()[0];
+	Vector2D& vecB = tri.GetCoordinates()[1];
+
 	float inverseSlopeLeft = VectorMath::FindReciprocalSlope({ vecC.x, vecC.y }, { vecB.x, vecB.y });
 	float inverseSlopeRight = VectorMath::FindReciprocalSlope({ vecC.x, vecC.y }, { vecA.x, vecA.y });
 
@@ -237,7 +240,8 @@ void RendererUtility::FillFlatTopTriangle(const Vector2D& vecA, const Vector2D& 
 		}
 		for (int x = xStart; x < xEnd; x++)
 		{
-			DrawPixel(x, y, CORAL);
+			//DrawPixel(x, y, CORAL);
+			DrawTexel(x, y, tri);
 		}
 	}
 }
@@ -259,8 +263,12 @@ void RendererUtility::FillFlatBottomTriangle(const Vector2D& vecA, const Vector2
 	}
 }
 
-void RendererUtility::FillFlatBottomTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, const Texture2D& texture)
+void RendererUtility::FillFlatBottomTriangle(Triangle& tri, const Vector2D& vecC)
 {
+
+	Vector2D& vecA = tri.GetCoordinates()[0];
+	Vector2D& vecB = tri.GetCoordinates()[1];
+
 	float inverseSlopeLeft = VectorMath::FindReciprocalSlope({ vecA.x, vecA.y }, { vecB.x, vecB.y });
 	float inverseSlopeRight = VectorMath::FindReciprocalSlope({ vecC.x, vecC.y }, { vecA.x, vecA.y });
 
@@ -277,7 +285,8 @@ void RendererUtility::FillFlatBottomTriangle(const Vector2D& vecA, const Vector2
 		}
 		for (int x = xStart; x < xEnd; x++)
 		{
-			DrawPixel(x, y, CYAN);
+			//DrawPixel(x, y, CYAN);
+			DrawTexel(x, y, tri);
 		}
 	}
 }
@@ -364,4 +373,59 @@ bool RendererUtility::CheckForMatchingState(const Renderer* renderer, const std:
 	}
 
 	return false;
+}
+
+// Drawing pixel not working, too tiered to look into it now.
+void RendererUtility::DrawTexel(float x, float y, Triangle& tri)
+{
+	Vector2D point = { x, y };
+	Vector3D weights = BarycentricWeights(tri, point);
+
+	float alpha = weights.x;
+	float beta = weights.y;
+	float gamma = weights.z;
+
+	float u0 = tri.GetTextureCoordinates()[0].GetUCoordinate();
+	float u1 = tri.GetTextureCoordinates()[1].GetUCoordinate();
+	float u2 = tri.GetTextureCoordinates()[2].GetUCoordinate();
+
+	float v0 = tri.GetTextureCoordinates()[0].GetVCoordinate();
+	float v1 = tri.GetTextureCoordinates()[1].GetVCoordinate();
+	float v2 = tri.GetTextureCoordinates()[2].GetVCoordinate();
+
+	float interpU = (u0 * alpha) + (u1 * beta) + (u2 * gamma);
+	float interpV = (v0 * alpha) + (v1 * beta) + (v2 * gamma);
+
+	int textureX = interpU * tri.GetTexture().GetWidth();
+	int textureY = interpV * tri.GetTexture().GetHeight();
+
+	int pixelLocation = (tri.GetTexture().GetWidth() * textureY) + textureX;
+	if (pixelLocation < tri.GetTexture().GetTexture().size())
+	{
+		DrawPixel(x, y, tri.GetTexture().GetTexture()[pixelLocation]);
+	}
+}
+
+Vector3D RendererUtility::BarycentricWeights(const Triangle& tri, const Vector2D& point)
+{
+	Vector2D& vecA = tri.GetCoordinates()[0];
+	Vector2D& vecB = tri.GetCoordinates()[1];
+	Vector2D& vecC = tri.GetCoordinates()[2];
+
+	Vector2D ac = vecC - vecA;
+	Vector2D ab = vecB - vecA;
+	Vector2D ap = point - vecA;
+	Vector2D pc = vecC - point;
+	Vector2D pb = vecB - point;
+
+	float areaParallelogramAbc = (ac.x * ab.y - ac.y * ab.x);
+
+	if (fabs(areaParallelogramAbc) < 1e-5)
+		return Vector3D(0, 0, 0);
+
+	float alpha = (pc.x * pb.y - pc.y * pb.x) / areaParallelogramAbc;
+	float beta = (ac.x * ap.y - ac.y * ap.x) / areaParallelogramAbc;
+	float gamma = 1 - alpha - beta;
+
+	return Vector3D(alpha, beta, gamma);
 }

@@ -30,12 +30,13 @@ public:
 
 	void DrawTriangleWireFrame(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color);
 	void DrawFilledTriangle(Triangle& triangle, uint32_t color);
-	void DrawTexturedTriangle(Triangle& triangle, Texture2D& texture);
+	void DrawTexturedTriangle(Triangle& triangle);
 	void FillFlatTopTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color);
-	void FillFlatTopTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, const Texture2D& texture);
 	void FillFlatBottomTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, uint32_t color);
 
-	void FillFlatBottomTriangle(const Vector2D& vecA, const Vector2D& vecB, const Vector2D& vecC, const Texture2D& texture);
+	void FillFlatTopTriangle(Triangle& tri, const Vector2D& vecC);
+	void FillFlatBottomTriangle(Triangle& tri, const Vector2D& vecC);
+	
 	void RenderByState(Triangle& triangle);
 private:
 	Renderer* owner;
@@ -45,7 +46,9 @@ private:
 	bool ShouldRenderWireframe();
 	bool ShouldRenderTexture();
 	bool CheckForMatchingState(const Renderer* renderer, const std::vector<RenderState>& statesToCheck);
+	void DrawTexel(float x, float y, Triangle& tri);
 
 
+	Vector3D BarycentricWeights(const Triangle& tri, const Vector2D& point);
 };
 

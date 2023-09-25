@@ -166,7 +166,7 @@ void Renderer::UpdateMeshToRender()
 	}
 
 	meshToRender->SetRotation(Vector3D(
-		meshToRender->GetRotation().x + .01,
+		meshToRender->GetRotation().x + .00,
 		meshToRender->GetRotation().y + .00,
 		meshToRender->GetRotation().z + .00
 	));
